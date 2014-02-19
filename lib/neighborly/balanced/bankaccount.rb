@@ -1,3 +1,4 @@
+require "neighborly/balanced/bankaccount/engine"
 require "neighborly/balanced/bankaccount/version"
 
 module Neighborly
