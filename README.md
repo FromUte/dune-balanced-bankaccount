@@ -1,5 +1,6 @@
 # Neighborly::Balanced::Bankaccount
 
+[![Build Status](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount.png?branch=jl-setup-test-env)](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount) [![Code Climate](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount.png)](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount)
 
 ## UNDER ACTIVE DEVELOPMENT
 
