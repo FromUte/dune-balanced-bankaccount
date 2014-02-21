@@ -4,6 +4,7 @@ require 'rails/all'
 
 Bundler.require(*Rails.groups)
 require "neighborly/balanced/bankaccount"
+require "slim"
 
 module Dummy
   class Application < Rails::Application
