@@ -1,0 +1,16 @@
+en:
+  neighborly:
+    balanced:
+      bankaccount:
+        payments:
+          new:
+            bankaccount:
+              title: 'Checkout using a Bank Account'
+              subtitle: 'Lorem ipsum dolor sit amet'
+            billing:
+              title: 'Billing Information'
+              subtitle: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
+            terms: 'By contributing to this project I agree with the %{link}.'
+            terms-link: 'Terms & Conditions of Use'
+            confirm: 'Confirm payment'
+            proccessing: 'Processing...'
