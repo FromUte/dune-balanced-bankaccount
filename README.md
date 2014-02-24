@@ -32,6 +32,11 @@ And load our JavaScript:
 //= require neighborly-balanced-bankaccount
 ```
 
+And install the engine:
+
+```console
+$ bundle exec rake railties:install:migrations db:migrate
+```
 
 ## Contributing
 
