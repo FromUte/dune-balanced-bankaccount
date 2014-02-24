@@ -1,1 +1,44 @@
-h1 payments#new
+= initjs_tag app_name: 'Neighborly', partial: true
+
+.neighborly-balanced-bankaccount-form[data-balanced-bankaccount-form data-balanced-marketplace-id=@balanced_marketplace_id]
+  = simple_form_for :payment, url: payments_path, html: { class: 'custom', novalidate: '' } do |f|
+    .row
+      .large-12.columns.title
+        h4 = t('.bankaccount.title')
+        p = t('.bankaccount.subtitle')
+
+      .large-12.columns.check-numbers
+        = image_tag('payments/check-numbers.png')
+
+      .large-12.columns.account-informations
+        .row
+          .large-12.columns
+            = f.input :account_holder_name
+
+          .large-6.small-6.columns
+            = f.input :routing_number
+
+          .large-6.small-6.columns
+            = f.input :bank_name, disabled: true
+
+          .large-12.columns
+            = f.input :account_number
+
+      .user-informations
+        = f.simple_fields_for :user do |fu|
+          .large-12.columns.title
+            hr
+            h4 = t('.billing.title')
+            p = t('.billing.subtitle')
+
+      .large-12.columns.terms
+        = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
+
+      .large-6.columns
+        = submit_tag t('.confirm'), class: 'button', data: { disable_with: t('.proccessing') }
+
+      .large-6.columns.text-right.balanced-seal
+        = link_to image_tag('https://balancedpowered.s3.amazonaws.com/secured-1-4.png'), 'https://www.balancedpayments.com/'
+
+  #terms-modal.reveal-modal.small.fixed
+
