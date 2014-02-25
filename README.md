@@ -38,6 +38,14 @@ And install the engine:
 $ bundle exec rake railties:install:migrations db:migrate
 ```
 
+### Load/Update Routing Numbers in database
+
+We have a rake task to update the Routing Numbers from [fededirectory.frb.org](http://www.fededirectory.frb.org/fpddir.txt) with the Bank Name.
+
+From your main app, just run:
+
+`$ rake neighborly_balanced_bankaccout:update_routing_numbers`
+
 ## Contributing
 
 1. Fork it
