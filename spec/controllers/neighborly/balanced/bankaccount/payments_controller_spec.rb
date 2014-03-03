@@ -38,6 +38,11 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       get :new, contribution_id: 42
       expect(assigns(:bank_account)).to_not be_nil
     end
+
+    it 'should assign customer to view' do
+      get :new, contribution_id: 42
+      expect(assigns(:customer)).to eq customer
+    end
   end
 
   describe "POST 'create'" do
