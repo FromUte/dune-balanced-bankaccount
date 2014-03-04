@@ -23,8 +23,11 @@
           .large-6.small-6.columns
             = f.input :bank_name, disabled: true
 
-          .large-12.columns
+          .large-8.columns
             = f.input :account_number
+
+          .large-4.columns
+            = f.input :account_type, as: :radio_buttons, collection: [['Checking', 'checking'], ['Savings', 'savings']], checked: 'checking'
 
       .user-informations
         = f.simple_fields_for :user do |fu|
