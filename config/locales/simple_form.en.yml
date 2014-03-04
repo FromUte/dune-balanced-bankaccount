@@ -7,4 +7,9 @@ en:
         address_state: 'State'
         address_zip_code: 'Zip code'
         update_address: "Update my address on my profile."
-
+      payment:
+        account_holder_name: 'Account Holder Name'
+        routing_number: 'Routing Number'
+        bank_name: 'Bank Name'
+        account_number: 'Account Number'
+        account_type: 'Account Type'
