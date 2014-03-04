@@ -20,4 +20,15 @@ en:
             bank_accounts:
               title: 'Accounts'
               bank_name: 'Bank Name'
-
+        accounts:
+          new:
+            bankaccount:
+              title: 'Bank Account'
+              subtitle: 'Lorem ipsum dolor sit amet'
+            status: 'Account Status:'
+            account_verified: 'Account Verified'
+            account_unverified: 'Account Unverified'
+            verify: 'Verify'
+            update: 'Update Bank Account'
+            add: 'Add Bank Account'
+            proccessing: 'Processing...'
