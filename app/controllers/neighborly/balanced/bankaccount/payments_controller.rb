@@ -1,9 +1,5 @@
 module Neighborly::Balanced::Bankaccount
-  class PaymentsController < ActionController::Base
-    def new
-      prepare_new_view
-    end
-
+  class PaymentsController < AccountsController
     def create
       attach_bank_to_customer
       update_customer
