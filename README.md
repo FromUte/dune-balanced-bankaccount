@@ -44,7 +44,7 @@ We have a rake task to update the Routing Numbers from [fededirectory.frb.org](h
 
 From your main app, just run:
 
-`$ rake neighborly_balanced_bankaccout:update_routing_numbers`
+`$ rake neighborly_balanced_bankaccount:update_routing_numbers`
 
 ## Contributing
 

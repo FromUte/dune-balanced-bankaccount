@@ -1,4 +1,4 @@
-namespace :neighborly_balanced_bankaccout do
+namespace :neighborly_balanced_bankaccount do
   desc 'Update routing number table'
   task :update_routing_numbers => :environment do
     puts 'Fetching file from: fededirectory.frb.org...'
