@@ -14,6 +14,9 @@ en:
             terms-link: 'Terms & Conditions of Use'
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
+            errors:
+              bank_error: 'The Bank Account submitted is invalid.'
+              routing_number: 'The Routing Number is invalid.'
             bank_accounts:
               title: 'Accounts'
               bank_name: 'Bank Name'

@@ -88,7 +88,7 @@
         = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
 
       .large-6.columns
-        = submit_tag t('.confirm'), class: 'button', data: { disable_with: t('.proccessing') }
+        = submit_tag t('.confirm'), class: 'button', data: { disable_with: t('.proccessing'), enable_with: t('.confirm') }
 
       .large-6.columns.text-right.balanced-seal
         = link_to image_tag('https://balancedpowered.s3.amazonaws.com/secured-1-4.png'), 'https://www.balancedpayments.com/'
