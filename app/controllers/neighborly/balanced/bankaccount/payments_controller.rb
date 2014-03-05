@@ -5,6 +5,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def create
+      attach_bank_to_customer
       update_customer
 
       contribution = Contribution.find(params[:payment].fetch(:contribution_id))
@@ -16,9 +17,17 @@ module Neighborly::Balanced::Bankaccount
 
     private
 
+    def attach_bank_to_customer
+      bank_account = resource_params.fetch(:use_bank)
+      unless customer.bank_accounts.any? { |c| c.id.eql? bank_account }
+        customer.add_bank_account(resource_params.fetch(:use_bank))
+      end
+    end
+
     def resource_params
       params.require(:payment).
              permit(:contribution_id,
+                    :use_bank,
                     :pay_fee,
                     user: {})
     end
