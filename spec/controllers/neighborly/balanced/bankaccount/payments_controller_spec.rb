@@ -6,7 +6,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   let(:current_user) { double('User').as_null_object }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: ['SOME_BANK'],
+           bank_accounts: [double('::Balanced::BankAccount', id: 'SOME_BANK')],
            uri:           '/qwertyuiop').as_null_object
   end
 
@@ -50,9 +50,42 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       {
         'payment' => {
           'contribution_id' => '42',
+          'use_bank'        => 'BNK_ID',
           'user'            => {}
         },
       }
+    end
+
+    describe "insertion of bank account to a customer" do
+      let(:customer) { double('::Balanced::Customer').as_null_object }
+      let(:bank) do
+        double('::Balanced::BankAccount', id: params['payment']['use_bank'])
+      end
+      before do
+        controller.stub(:customer).and_return(customer)
+      end
+
+      context "customer doesn't have the given bank" do
+        before do
+          customer.stub(:bank_accounts).and_return([])
+        end
+
+        it "inserts to customer's bank accounts list" do
+          expect(customer).to receive(:add_bank_account).with(bank.id)
+          post :create, params
+        end
+      end
+
+      context "customer already has the bank" do
+        before do
+          customer.stub(:bank_accounts).and_return([bank])
+        end
+
+        it "skips insertion" do
+          expect(customer).to_not receive(:add_bank_account)
+          post :create, params
+        end
+      end
     end
 
     describe "update customer" do
@@ -62,5 +95,4 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       end
     end
   end
-
 end
