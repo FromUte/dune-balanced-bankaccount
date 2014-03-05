@@ -17,11 +17,54 @@ Neighborly.Neighborly.Balanced.Bankaccount.Payments.New = Backbone.View.extend
     this.$form = this.$('form')
     this.$form.bind('submit', this.submit)
     this.$('#payment_routing_number').bind('blur', this.showBankName)
+    this.$('input[name="payment[use_bank]"]').bind('change', this.toggleReplaceBank)
+    this.$('input[type=radio]').bind('change', this.fixFoundationRadio)
 
   validate: =>
 
+  fixFoundationRadio: =>
+    this.$('.radio.checked').removeClass('checked')
+    this.$('input[type=radio]:checked ~ .radio').addClass('checked')
+
+  toggleReplaceBank: =>
+    if this.$('#payment_use_bank_new').is(':checked')
+      this.$('.add-new-bankaccount-form').removeClass('hide')
+    else
+      this.$('.add-new-bankaccount-form').addClass('hide')
+
   submit: (event) =>
+    selectedBank = this.$('[name="payment[use_bank]"]:checked, [name="payment[use_bank]"]:hidden')
+    return if $.inArray(selectedBank.val(), ['new', '']) == -1
+
     event.preventDefault()
+
+    bankAccountData =
+      name:           this.$('#payment_account_holder_name').val()
+      routing_number: this.$('#payment_routing_number').val()
+      account_number: this.$('#payment_account_number').val()
+      type:           this.$('input[name="payment[account_type]"]:checked').val()
+
+    this.$('[data-balanced-bank-account-input]').val('')
+
+    balanced_callback_for_201 = (response) ->
+      selectedBank.val(response.data.uri)
+      $('[data-balanced-bankaccount-form] form').submit()
+
+    balanced_callback_for_402 = (response) ->
+      alertBox     = $('<div>', { 'class': 'row', 'html':
+                       $('<div>', { 'class': 'alert-box large-10 columns large-centered animated fadeIn alert dismissible', 'html': '<%= I18n.t('neighborly.balanced.bankaccount.payments.new.errors.card_tokenization_error') %>' })
+                     } )
+      flashWrapper = $('.flash') || $('body > header').next($('<div>', { 'class': 'flash', 'html' }))
+      flashWrapper.append(alertBox)
+      $('.neighborly-balanced-bankaccount-form [type="submit"]').
+        removeAttr('disabled').
+        removeAttr('data-disable-with').
+        attr('value', 'Confirm payment')
+
+    balanced.bankAccount.create bankAccountData, (response) ->
+      switch response.status
+        when 201 then balanced_callback_for_201(response)
+        when 402 then balanced_callback_for_402(response)
 
   showBankName: (e)=>
     number = $.trim(this.$('#payment_routing_number').val())
