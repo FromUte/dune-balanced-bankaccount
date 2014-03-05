@@ -76,11 +76,13 @@ Neighborly.Neighborly.Balanced.Bankaccount.Payments.New = Backbone.View.extend
 
   showBankName: (e)=>
     number = $.trim(this.$('#payment_routing_number').val())
-    if number.length is 9
-      $.getJSON $('[data-routing-number-path]').data('routing-number-path').replace('id', number), (response) =>
-        if response.ok
-          this.$('#payment_bank_name').val($.trim(response.bank_name))
-        else
-          this.$('#payment_bank_name').val('')
-    else
+    unless number.length is 9
       this.$('#payment_bank_name').val('')
+      return
+
+    $.getJSON $('[data-routing-number-path]').data('routing-number-path').replace('id', number), (response) =>
+      if response.ok
+        this.$('#payment_bank_name').val($.trim(response.bank_name))
+      else
+        this.$('#payment_bank_name').val('')
+
