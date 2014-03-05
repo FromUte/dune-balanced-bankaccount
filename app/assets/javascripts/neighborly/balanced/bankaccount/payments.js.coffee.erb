@@ -80,7 +80,6 @@ Neighborly.Neighborly.Balanced.Bankaccount.Payments.New = Backbone.View.extend
       $.getJSON $('[data-routing-number-path]').data('routing-number-path').replace('id', number), (response) =>
         if response.ok
           this.$('#payment_bank_name').val($.trim(response.bank_name))
-          return true
         else
           this.$('#payment_bank_name').val('')
     else
