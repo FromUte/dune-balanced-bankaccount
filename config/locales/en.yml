@@ -14,3 +14,7 @@ en:
             terms-link: 'Terms & Conditions of Use'
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
+            bank_accounts:
+              title: 'Accounts'
+              bank_name: 'Bank Name'
+
