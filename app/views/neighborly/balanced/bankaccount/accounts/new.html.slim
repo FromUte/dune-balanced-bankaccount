@@ -1,0 +1,44 @@
+= initjs_tag app_name: 'Neighborly', partial: true
+
+.neighborly-balanced-bankaccount-form[data-balanced-bankaccount-form data-balanced-marketplace-id=@balanced_marketplace_id data-routing-number-path=routing_number_path(:id)]
+  = simple_form_for :payment, url: accounts_path, html: { class: 'custom', novalidate: '' } do |f|
+    = f.input :use_bank, as: :hidden
+    .row
+      .large-12.columns.title
+        h3
+          .row
+            .large-4.columns
+              = t('.bankaccount.title')
+            .large-8.columns.text-right
+              small
+                - if @bank_account.present?
+                  - verifications = @bank_account.verifications
+                  = t('.status')
+                  | &nbsp;
+                  - if verifications.size > 0 && verifications.first.state == 'verified'
+                    span.label = t('.account_verified')
+                  - else
+                    span.label.alert = t('.account_unverified')
+                    | &nbsp;
+                    = link_to t('.verify'), '#'
+
+      .large-12.columns.account-informations
+        .row
+          .large-12.columns
+            = f.input :account_holder_name, input_html: { value: @bank_account.try(:name) }
+
+          .large-6.small-6.columns
+            = f.input :routing_number, input_html: { value: @bank_account.try(:routing_number) }
+
+          .large-6.small-6.columns
+            = f.input :bank_name, disabled: true, input_html: { value: @bank_account.try(:bank_name) }, required: false
+
+          .large-8.columns
+            = f.input :account_number, input_html: { value: @bank_account.try(:account_number) }
+
+          .large-4.columns
+            = f.input :account_type, as: :radio_buttons, collection: [['Checking', 'checking'], ['Savings', 'savings']], checked: (@bank_account.try(:type) || 'checking')
+
+      .large-12.columns.submit
+        = f.button :submit, (@bank_account.present? ? t('.update') : t('.add')), data: { disable_with: t('.proccessing'), enable_with: (@bank_account.present? ? t('.update') : t('.add')) }
+

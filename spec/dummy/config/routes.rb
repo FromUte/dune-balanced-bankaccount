@@ -4,4 +4,10 @@ Rails.application.routes.draw do
   resources :projects do
     resources :contributions
   end
+
+  resources :users do
+    member do
+      get :payments
+    end
+  end
 end

@@ -7,11 +7,17 @@ value_with_fees = ->(value) do
   "TODO"
 end
 
+account_path = -> do
+  Neighborly::Balanced::Bankaccount::Engine.
+    routes.url_helpers.new_account_path()
+end
+
 begin
   PaymentEngines.register(name:           'balanced-bankaccount',
                           locale:         'en',
                           value_with_fees: value_with_fees,
-                          review_path:    review_path)
+                          review_path:    review_path,
+                          account_path:   account_path)
 rescue Exception => e
   puts "Error while registering payment engine: #{e}"
 end
