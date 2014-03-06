@@ -8,7 +8,7 @@ Neighborly.Neighborly.Balanced.Bankaccount.Flash =
     alertBox         = $('<div>', { 'class': 'alert-box error text-center', 'html':
                          $('<h5>', { 'html': text })
                        } )
-    errorBoxWrapper  = $('<div>', { 'class': 'error-box large-12 columns hide', 'html': alertBox}).insertAfter('.neighborly-balanced-bankaccount-form .terms')
+    errorBoxWrapper  = $('<div>', { 'class': 'error-box large-12 columns hide', 'html': alertBox}).insertBefore('.neighborly-balanced-bankaccount-form .submit')
     errorBoxWrapper.fadeIn(300)
 
   remove: ->
