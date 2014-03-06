@@ -24,7 +24,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       get :new, contribution_id: 42
     end
 
-    it 'request should be successfuly' do
+    it 'should complete the request successfully' do
       get :new, contribution_id: 42
       expect(response.status).to eq 200
     end
@@ -63,7 +63,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       end
 
       it "set flash message" do
-        expect(flash[:success]).to eq 'Your bank account was successful updated.'
+        expect(flash[:success]).to eq 'Your bank account was successfully updated.'
       end
     end
 

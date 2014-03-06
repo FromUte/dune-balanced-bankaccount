@@ -22,7 +22,7 @@ en:
               bank_name: 'Bank Name'
         accounts:
           create:
-            success: 'Your bank account was successful updated.'
+            success: 'Your bank account was successfully updated.'
           new:
             bankaccount:
               title: 'My Bank Account'
