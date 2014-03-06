@@ -21,14 +21,16 @@ en:
               title: 'Accounts'
               bank_name: 'Bank Name'
         accounts:
+          create:
+            success: 'Your bank account was successful updated.'
           new:
             bankaccount:
-              title: 'Bank Account'
+              title: 'My Bank Account'
               subtitle: 'Lorem ipsum dolor sit amet'
             status: 'Account Status:'
             account_verified: 'Account Verified'
             account_unverified: 'Account Unverified'
-            verify: 'Verify'
+            verify: 'Verify now'
             update: 'Update Bank Account'
             add: 'Add Bank Account'
             proccessing: 'Processing...'
