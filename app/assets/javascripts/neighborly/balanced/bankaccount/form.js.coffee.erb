@@ -29,7 +29,11 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
     event.preventDefault()
 
     that = this
-    $.getJSON $('[data-routing-number-path]').data('routing-number-path').replace('id', this.$('#payment_routing_number').val()), (response) ->
+    routing_number_path = $('[data-routing-number-path]').
+                            data('routing-number-path').
+                            replace('id', this.$('#payment_routing_number').val())
+
+    $.getJSON routing_number_path, (response) ->
       if response.ok
         that.Flash.remove()
         that.submitToBalanced(selectedBank)
