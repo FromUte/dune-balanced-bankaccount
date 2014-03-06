@@ -81,8 +81,6 @@
                 = fu.input :address_state, as: :select, collection: State.array, selected: @customer.address.try(:[], :state), include_blank: false
               .large-3.columns
                 = fu.input :address_zip_code, input_html: { value: @customer.address.try(:[], :postal_code) }
-              .large-12.columns.update-address
-                = fu.input :update_address, as: :boolean, input_html: { checked: true }
 
       .large-12.columns.terms
         = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
