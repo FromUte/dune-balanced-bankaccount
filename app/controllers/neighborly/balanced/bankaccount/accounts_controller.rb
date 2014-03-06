@@ -1,7 +1,8 @@
 module Neighborly::Balanced::Bankaccount
   class AccountsController < ActionController::Base
     def new
-      prepare_new_view
+      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
+      @bank_account            = customer.bank_accounts.try(:last)
     end
 
     def create
@@ -26,11 +27,6 @@ module Neighborly::Balanced::Bankaccount
                     :use_bank,
                     :pay_fee,
                     user: {})
-    end
-
-    def prepare_new_view
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @bank_account            = customer.bank_accounts.try(:last)
     end
 
     def customer
