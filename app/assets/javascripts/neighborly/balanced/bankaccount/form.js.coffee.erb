@@ -13,7 +13,6 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
       balancedMarketplaceID = $('[data-balanced-bankaccount-form]').attr('data-balanced-marketplace-id')
       balanced.init("/v1/marketplaces/#{balancedMarketplaceID}")
 
-    this.$button = this.$('input[type=submit]')
     this.$form = this.$('form')
     this.$form.bind('submit', this.submit)
     this.$('#payment_routing_number').bind('blur', this.showBankName)
