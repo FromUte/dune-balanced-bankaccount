@@ -1,7 +1,7 @@
 class Configuration
-  def self.fetch(key)
-  end
+  def self.[](*);         end
 
-  def self.[](key)
-  end
+  def self.fetch(*);      end
+
+  def self.table_name(*); end
 end
