@@ -18,7 +18,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     controller.stub(:current_user).and_return(current_user)
   end
 
-  describe "GET 'new'" do
+  describe 'GET new' do
     it 'should fetch balanced customer' do
       expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:fetch).and_return(customer)
       get :new, contribution_id: 42
@@ -45,12 +45,12 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     end
   end
 
-  describe "POST 'create'" do
+  describe 'POST create' do
     let(:params) do
       {
         'payment' => {
           'contribution_id' => '42',
-          'use_bank'        => 'BNK_ID',
+          'use_bank'        => 'SOME_BANK',
           'user'            => {}
         },
       }
@@ -58,16 +58,16 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
 
     context 'successful' do
       before { post :create, params }
-      it "redirects to user payments page" do
+      it 'redirects to user payments page' do
         expect(response).to redirect_to(/users\/(.+)\/payments/)
       end
 
-      it "set flash message" do
+      it 'set flash message' do
         expect(flash[:success]).to eq 'Your bank account was successfully updated.'
       end
     end
 
-    describe "insertion of bank account to a customer" do
+    describe 'insertion of bank account to a customer' do
       let(:customer) { double('::Balanced::Customer').as_null_object }
       let(:bank) do
         double('::Balanced::BankAccount', id: params['payment']['use_bank'])
@@ -87,13 +87,29 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
       end
 
-      context "customer already has the bank" do
+      context 'customer already has the bank' do
         before do
           customer.stub(:bank_accounts).and_return([bank])
         end
 
-        it "skips insertion" do
+        it 'skips insertion' do
           expect(customer).to_not receive(:add_bank_account)
+          post :create, params
+        end
+      end
+
+      context 'customer has other bank account' do
+        let(:bank) do
+          double('::Balanced::BankAccount', id: 'SOME_OLD_ACCOUNT')
+        end
+
+        before do
+          customer.stub(:bank_accounts).and_return([bank])
+        end
+
+        it 'unstores the other bank' do
+          expect(customer).to receive(:add_bank_account)
+          expect(bank).to receive(:unstore)
           post :create, params
         end
       end
