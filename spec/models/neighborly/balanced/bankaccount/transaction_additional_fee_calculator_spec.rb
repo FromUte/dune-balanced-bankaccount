@@ -21,7 +21,7 @@ describe Neighborly::Balanced::Bankaccount::TransactionAdditionalFeeCalculator d
     end
 
     context "when base calculation of fees gets greater than $5" do
-      # Float gross amount is 1010.3
+      # Using just percentage calculation the gross amount would be 1010.3
       let(:transaction_value) { 1000.0 }
 
       it "has gross amount equal to net amount plus 5" do
