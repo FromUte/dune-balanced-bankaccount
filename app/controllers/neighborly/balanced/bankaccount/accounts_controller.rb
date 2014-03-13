@@ -19,7 +19,7 @@ module Neighborly::Balanced::Bankaccount
       unless customer_bank_accounts.any? { |c| c.id.eql? bank_account }
         unstore_all_bank_accounts
         # The reload here is needed because of Balanced conflit error
-        customer.reload.add_bank_account(resource_params.fetch(:use_bank))
+        customer.reload.add_bank_account(bank_account)
       end
     end
 
