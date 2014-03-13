@@ -21,7 +21,12 @@ module Neighborly::Balanced::Bankaccount
         # Not calling #reload raises Balanced::ConflictError when attaching a
         # new card after unstoring others.
         customer.reload.add_bank_account(bank_account)
+        verify_bank_account(bank_account)
       end
+    end
+
+    def verify_bank_account(bank_account)
+      Balanced::BankAccount.find(bank_account).verify
     end
 
     def unstore_all_bank_accounts

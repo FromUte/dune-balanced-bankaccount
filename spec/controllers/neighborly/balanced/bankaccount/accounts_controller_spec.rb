@@ -14,6 +14,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
+    ::Balanced::BankAccount.stub_chain(:find, :verify)
     controller.stub(:current_user).and_return(current_user)
   end
 
@@ -111,6 +112,18 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           expect(bank).to receive(:unstore)
           post :create, params
         end
+      end
+
+      context 'start bank account verification' do
+        before do
+          customer.stub(:bank_accounts).and_return([])
+        end
+
+        it 'should start the bank account verification' do
+          expect(::Balanced::BankAccount.find).to receive(:verify)
+          post :create, params
+        end
+
       end
     end
   end
