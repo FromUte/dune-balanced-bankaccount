@@ -14,7 +14,6 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
-
     controller.stub(:current_user).and_return(current_user)
   end
 
