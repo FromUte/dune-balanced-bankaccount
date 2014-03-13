@@ -16,9 +16,9 @@
                   = t('.status')
                   | &nbsp;
                   - if verifications.size > 0 && verifications.first.state == 'verified'
-                    span.label = t('.account_verified')
+                    span.label = t('.account_confirmed')
                   - else
-                    span.label.alert = t('.account_unverified')
+                    span.label.alert = t('.account_unconfirmed')
                     | &nbsp;
                     = link_to t('.verify'), '#'
 
