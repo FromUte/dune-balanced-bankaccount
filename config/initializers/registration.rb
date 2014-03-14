@@ -4,7 +4,7 @@ review_path = ->(contribution) do
 end
 
 value_with_fees = ->(value) do
-  "TODO"
+  Neighborly::Balanced::Bankaccount::TransactionAdditionalFeeCalculator.new(value).gross_amount
 end
 
 account_path = -> do
