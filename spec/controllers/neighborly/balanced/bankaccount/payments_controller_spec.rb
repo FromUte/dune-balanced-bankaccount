@@ -26,6 +26,9 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   end
 
   describe 'POST create' do
+    let(:payment) do
+      double('Payment', status: :succeeded).as_null_object
+    end
     let(:params) do
       {
         'payment' => {
@@ -35,11 +38,50 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
         },
       }
     end
+    before do
+      Neighborly::Balanced::Bankaccount::Payment.
+        any_instance.
+        stub(:status).
+        and_return(:succeeded)
+    end
 
-    context 'successful' do
-      before { post :create, params }
+    it 'generates new payment with given params' do
+      Neighborly::Balanced::Bankaccount::Payment.should_receive(:new).
+                                    with(anything, customer, an_instance_of(Contribution), params['payment']).
+                                    and_return(payment)
+      post :create, params
+    end
+
+    it 'generates new payment with engine\'s name given' do
+      Neighborly::Balanced::Bankaccount::Payment.should_receive(:new).
+                                    with('balanced-bankaccount', anything, anything, anything).
+                                    and_return(payment)
+      post :create, params
+    end
+
+    it 'checkouts payment of contribution' do
+      Neighborly::Balanced::Bankaccount::Payment.any_instance.should_receive(:checkout!)
+      post :create, params
+    end
+
+    context 'with successul checkout' do
       it 'redirects to contribute page' do
+        post :create, params
         expect(response).to redirect_to('/projects/forty-two/contributions/42')
+      end
+    end
+
+    context 'with unsuccessul checkout' do
+      before do
+        Neighborly::Balanced::Bankaccount::Payment.
+          any_instance.
+          stub(:status).
+          and_return(:failed)
+      end
+
+      it 'redirects to contribution edit page' do
+        post :create, params
+        expect(response).to redirect_to('/projects/forty-two/contributions/42/edit')
       end
     end
 
