@@ -5,13 +5,12 @@ module Neighborly::Balanced::Bankaccount
       update_customer
 
       @contribution = Contribution.find(params[:payment].fetch(:contribution_id))
-      @payment      = Neighborly::Balanced::Bankaccount::Payment.new(
-        'balanced-bankaccount',
+      @payment      = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
         customer,
         @contribution,
         resource_params
       )
-      @payment.checkout!
+      @payment.complete
 
       redirect_to(*checkout_response_params)
     end
