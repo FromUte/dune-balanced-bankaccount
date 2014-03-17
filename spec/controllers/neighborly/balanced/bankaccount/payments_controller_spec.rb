@@ -6,7 +6,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   let(:current_user) { double('User').as_null_object }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', id: 'SOME_BANK')],
+           bank_accounts: [double('::Balanced::BankAccount', uid: '/ABANK')],
            uri:           '/qwertyuiop').as_null_object
   end
 
@@ -33,7 +33,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       {
         'payment' => {
           'contribution_id' => '42',
-          'use_bank'        => 'SOME_BANK',
+          'use_bank'        => '/ABANK',
           'user'            => {}
         },
       }
