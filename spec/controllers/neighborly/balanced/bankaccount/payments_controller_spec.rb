@@ -20,7 +20,9 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
 
   describe 'get new' do
     it 'should use accounts controller new action' do
-      expect_any_instance_of(Neighborly::Balanced::Bankaccount::AccountsController).to receive(:new)
+      expect_any_instance_of(
+        Neighborly::Balanced::Bankaccount::AccountsController
+      ).to receive(:new)
       get :new, contribution_id: 42
     end
   end
@@ -47,8 +49,8 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
 
     it 'generates new payment with given params' do
       Neighborly::Balanced::Bankaccount::Payment.should_receive(:new).
-                                    with(anything, customer, an_instance_of(Contribution), params['payment']).
-                                    and_return(payment)
+        with(anything, customer, an_instance_of(Contribution), params['payment']).
+        and_return(payment)
       post :create, params
     end
 
@@ -87,14 +89,18 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
 
     describe 'insertion of bank account to a customer' do
       it 'should use accounts controller attach_bank_to_customer method' do
-        expect_any_instance_of(Neighborly::Balanced::Bankaccount::AccountsController).to receive(:attach_bank_to_customer)
+        expect_any_instance_of(
+          Neighborly::Balanced::Bankaccount::AccountsController
+        ).to receive(:attach_bank_to_customer)
         post :create, params
       end
     end
 
     describe 'update customer' do
       it 'update user attributes and balanced customer' do
-        expect_any_instance_of(Neighborly::Balanced::Customer).to receive(:update!)
+        expect_any_instance_of(
+          Neighborly::Balanced::Customer
+        ).to receive(:update!)
         post :create, params
       end
     end
