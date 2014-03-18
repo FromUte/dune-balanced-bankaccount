@@ -12,15 +12,14 @@
             .large-8.columns.text-right
               small
                 - if @bank_account.present?
-                  - verifications = @bank_account.verifications
                   = t('.status')
                   | &nbsp;
-                  - if verifications.size > 0 && verifications.first.state == 'verified'
+                  - if @bank_account.verifications.try(:last).try(:state) == 'verified'
                     span.label = t('.account_confirmed')
                   - else
                     span.label.alert = t('.account_unconfirmed')
                     | &nbsp;
-                    = link_to t('.verify'), '#'
+                    = link_to t('.verify'), new_confirmation_path
 
       .large-12.columns.account-informations
         .row
