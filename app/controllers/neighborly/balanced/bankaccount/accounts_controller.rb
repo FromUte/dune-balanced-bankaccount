@@ -5,6 +5,7 @@ module Neighborly::Balanced::Bankaccount
     def new
       @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
       @bank_account            = customer.bank_accounts.try(:last)
+      render layout: false
     end
 
     def create
