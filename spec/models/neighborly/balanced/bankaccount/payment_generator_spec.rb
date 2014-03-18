@@ -53,5 +53,13 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
       ).to receive(:checkout!)
       subject.complete
     end
+
+    it 'checkouts using DelayedPayment when is not able to debit resource' do
+      subject.stub(:can_debit_resource?).and_return(false)
+      expect_any_instance_of(
+        Neighborly::Balanced::Bankaccount::DelayedPayment
+      ).to receive(:checkout!)
+      subject.complete
+    end
   end
 end

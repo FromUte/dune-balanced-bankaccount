@@ -24,9 +24,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def payment_class
-      @payment_class ||= if can_debit_resource?
-        Neighborly::Balanced::Bankaccount::Payment
-      end
+      @payment_class ||= can_debit_resource? ? Payment : DelayedPayment
     end
 
     def can_debit_resource?
