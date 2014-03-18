@@ -29,10 +29,12 @@ module Neighborly::Balanced::Bankaccount
       end
     end
 
-    protected
-
     def can_debit_resource?
-      true
+      debit_resource.verifications.first.try(:state).eql? 'verified'
+    end
+
+    def debit_resource
+      @debit_resource ||= ::Balanced::BankAccount.find(@attrs.fetch(:use_bank))
     end
   end
 end
