@@ -37,3 +37,13 @@
           h4 = t('.contributions.title')
           p = t('.contributions.subtitle')
 
+          section.projects.row
+            - for project in Project.visible.limit(2)
+              .project.large-6.columns
+                .project-image
+                  /= image_tag project.display_image('project_thumb'), alt: project.name
+                  = image_tag 'https://s3.amazonaws.com/neighborly_new_production/uploads/project/uploaded_image/75/project_thumb_westside_thumbnail.jpg'
+                p
+                  strong = project.name
+                .contribution
+                  = t('.contributions.value', value: '$101.60').html_safe
