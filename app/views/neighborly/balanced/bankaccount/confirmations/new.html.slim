@@ -1,3 +1,39 @@
 .row
   .large-12.columns
-    h1 Confirmations#new
+    h2 = @title = t('.title')
+    p = t('.subtitle')
+
+    = simple_form_for :confirmation, url: confirmations_path do |f|
+      .row
+        .large-6.columns
+          .alert-box.info = t('.remaining_attempts', value: @verification.remaining_attempts)
+          p
+            strong = t('.bank_account_number')
+            | &nbsp;
+            = @bank_account.account_number
+
+          p
+            strong = t('.bank_name')
+            | &nbsp;
+            = @bank_account.bank_name
+          .row
+            .large-6.columns
+              = f.label :amount_1
+              .row.collapse
+                .large-4.columns
+                  span.prefix $0.
+                .large-8.columns
+                  = f.input :amount_1, label: false, placeholder: '00', input_html: { class: 'with-prefix' }
+            .large-6.columns
+              = f.label :amount_2
+              .row.collapse
+                .large-4.columns
+                  span.prefix $0.
+                .large-8.columns
+                  = f.input :amount_2, label: false, placeholder: '00', input_html: { class: 'with-prefix' }
+
+          = f.button :submit, t('.submit'), data: { disable_with: t('.proccessing') }
+        .large-6.columns
+          h4 = t('.contributions.title')
+          p = t('.contributions.subtitle')
+

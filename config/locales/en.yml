@@ -34,3 +34,19 @@ en:
             update: 'Update Bank Account'
             add: 'Add Bank Account'
             proccessing: 'Processing...'
+        confirmations:
+          new:
+            title: 'Confirm your bank account'
+            subtitle: 'Please enter the two amounts (in cents) we credited to your account. These can take up to three business days to appear in your account.'
+            remaining_attempts: 'Verification attempts remaining: %{value}'
+            bank_account_number: 'Bank Account Number:'
+            bank_name: 'Bank Name:'
+            submit: 'Confirm Bank Account'
+            proccessing: 'Proccessing'
+            contributions:
+              title: 'Pending contributions using bank account'
+              subtitle: 'You have the following contributions that are pending and will be processed when you confirm your bank account....'
+              value: 'Contribution value: <strong>%{value}</strong>'
+            errors:
+              bank_account_not_found: "You don't have any bank account to confirm, please add one."
+              already_confirmed: 'Your Bank Account was already confirmed.'
