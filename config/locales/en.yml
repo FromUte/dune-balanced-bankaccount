@@ -49,3 +49,8 @@ en:
             errors:
               bank_account_not_found: "You don't have any bank account to confirm, please add one."
               already_confirmed: 'Your bank account has already been confirmed.'
+          create:
+            messages:
+              success: 'Successfully confirmed your bank account.'
+              unnable_to_verify: 'Unable to verify. Please check the deposit amounts and enter them again.'
+              not_remaining_attempts: 'Your remaining attempts are sold out. We started a new verification process, that means we will try to deposit to your bank account again. Please check the deposit amounts in your bank and try it again.'

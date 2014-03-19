@@ -14,7 +14,7 @@
                 - if @bank_account.present?
                   = t('.status')
                   | &nbsp;
-                  - if @bank_account.verifications.try(:last).try(:state) == 'verified'
+                  - if @bank_account.verifications.try(:first).try(:state) == 'verified'
                     span.label = t('.account_confirmed')
                   - else
                     span.label.alert = t('.account_unconfirmed')
