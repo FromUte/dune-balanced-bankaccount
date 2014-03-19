@@ -14,6 +14,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
+    Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.stub(:complete)
 
     controller.stub(:current_user).and_return(current_user)
   end
@@ -41,28 +42,21 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       }
     end
     before do
-      Neighborly::Balanced::Bankaccount::Payment.
+      Neighborly::Balanced::Bankaccount::PaymentGenerator.
         any_instance.
         stub(:status).
         and_return(:succeeded)
     end
 
     it 'generates new payment with given params' do
-      Neighborly::Balanced::Bankaccount::Payment.should_receive(:new).
-        with(anything, customer, an_instance_of(Contribution), params['payment']).
+      Neighborly::Balanced::Bankaccount::PaymentGenerator.should_receive(:new).
+        with(customer, an_instance_of(Contribution), params['payment']).
         and_return(payment)
       post :create, params
     end
 
-    it 'generates new payment with engine\'s name given' do
-      Neighborly::Balanced::Bankaccount::Payment.should_receive(:new).
-                                    with('balanced-bankaccount', anything, anything, anything).
-                                    and_return(payment)
-      post :create, params
-    end
-
-    it 'checkouts payment of contribution' do
-      Neighborly::Balanced::Bankaccount::Payment.any_instance.should_receive(:checkout!)
+    it 'completes a payment of the contribution' do
+      Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.should_receive(:complete)
       post :create, params
     end
 
@@ -75,7 +69,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
 
     context 'with unsuccessul checkout' do
       before do
-        Neighborly::Balanced::Bankaccount::Payment.
+        Neighborly::Balanced::Bankaccount::PaymentGenerator.
           any_instance.
           stub(:status).
           and_return(:failed)
