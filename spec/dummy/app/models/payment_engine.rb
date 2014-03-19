@@ -1,5 +1,5 @@
 # Dummy class to be stubbed
-class PaymentEngines
+class PaymentEngine
   def self.register(*args)
   end
 end
