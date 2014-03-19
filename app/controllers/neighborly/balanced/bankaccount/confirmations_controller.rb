@@ -1,5 +1,6 @@
 module Neighborly::Balanced::Bankaccount
   class ConfirmationsController < ApplicationController
+    before_filter :authenticate_user!
     before_action :check_bank_account_availability, only: :new
 
     def new

@@ -17,10 +17,16 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
+    controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
 
   describe 'GET new' do
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
+      get :new
+    end
+
     context 'when user has a bank account' do
       it 'should fetch balanced customer' do
         expect_any_instance_of(
