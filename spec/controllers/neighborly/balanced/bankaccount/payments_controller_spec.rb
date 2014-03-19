@@ -15,7 +15,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.stub(:complete)
-
+    controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
 
@@ -41,6 +41,12 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
         },
       }
     end
+
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
+      post :create, params
+    end
+
     before do
       Neighborly::Balanced::Bankaccount::PaymentGenerator.
         any_instance.
