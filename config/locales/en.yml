@@ -44,8 +44,8 @@ en:
             submit: 'Confirm Bank Account'
             proccessing: 'Proccessing'
             contributions:
-              title: 'Pending contributions using bank account'
-              subtitle: 'You have the following contributions that are pending and will be processed when you confirm your bank account....'
+              title: 'Pending contributions'
+              subtitle: 'Payments will be charged and added to the campaign once your account has been confirmed.'
               value: 'Contribution value: <strong>%{value}</strong>'
             errors:
               bank_account_not_found: "You don't have any bank account to confirm, please add one."

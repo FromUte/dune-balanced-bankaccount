@@ -1,4 +1,4 @@
-.row
+.bankaccount-confirmations-new-page.row
   .large-12.columns
     h2 = @title = t('.title')
     p = t('.subtitle')
@@ -33,7 +33,7 @@
                   = f.input :amount_2, label: false, placeholder: '00', input_html: { class: 'with-prefix' }
 
           = f.button :submit, t('.submit'), data: { disable_with: t('.proccessing') }
-        .large-6.columns
+        section.pending-contributions.large-6.columns
           - if @contributions.present?
             h4 = t('.contributions.title')
             p = t('.contributions.subtitle')
