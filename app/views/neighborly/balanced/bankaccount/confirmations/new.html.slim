@@ -34,16 +34,16 @@
 
           = f.button :submit, t('.submit'), data: { disable_with: t('.proccessing') }
         .large-6.columns
-          h4 = t('.contributions.title')
-          p = t('.contributions.subtitle')
+          - if @contributions.present? && @contributions.any?
+            h4 = t('.contributions.title')
+            p = t('.contributions.subtitle')
 
-          section.projects.row
-            - for project in Project.visible.limit(2)
-              .project.large-6.columns
-                .project-image
-                  /= image_tag project.display_image('project_thumb'), alt: project.name
-                  = image_tag 'https://s3.amazonaws.com/neighborly_new_production/uploads/project/uploaded_image/75/project_thumb_westside_thumbnail.jpg'
-                p
-                  strong = project.name
-                .contribution
-                  = t('.contributions.value', value: '$101.60').html_safe
+            section.projects.row
+              - for contribution in @contributions
+                .project.large-6.columns
+                  .project-image
+                    = image_tag contribution.project.display_image('project_thumb'), alt: contribution.project.name
+                  p
+                    strong = contribution.project.name
+                  .contribution
+                    = t('.contributions.value', value: number_to_currency(contribution.value)).html_safe

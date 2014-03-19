@@ -44,6 +44,12 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
         expect(assigns(:bank_account)).to_not be_nil
       end
 
+      it 'should assign contributions to view' do
+        current_user.contributions.stub(:with_state).and_return([])
+        get :new
+        expect(assigns(:contributions)).to eq []
+      end
+
       it 'should assign customer to view' do
         get :new
         expect(assigns(:customer)).to eq customer

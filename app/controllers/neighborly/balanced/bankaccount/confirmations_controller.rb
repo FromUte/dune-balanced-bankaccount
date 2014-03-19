@@ -3,7 +3,8 @@ module Neighborly::Balanced::Bankaccount
     before_action :check_bank_account_availability, only: :new
 
     def new
-      @verification = bank_account.verifications.try(:last)
+      @verification  = bank_account.verifications.try(:last)
+      @contributions = current_user.contributions.with_state(:payment_authorized)
       render layout: 'application'
     end
 
