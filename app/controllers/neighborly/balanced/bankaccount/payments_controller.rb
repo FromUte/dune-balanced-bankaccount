@@ -4,15 +4,40 @@ module Neighborly::Balanced::Bankaccount
       attach_bank_to_customer
       update_customer
 
-      contribution = Contribution.find(params[:payment].fetch(:contribution_id))
-      redirect_to main_app.project_contribution_path(
-        contribution.project.permalink,
-        contribution.id
+      @contribution = Contribution.find(params[:payment].fetch(:contribution_id))
+      @payment      = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
+        customer,
+        @contribution,
+        resource_params
       )
+      @payment.complete
+
+      redirect_to(*checkout_response_params)
     end
 
     def update_customer
       Neighborly::Balanced::Customer.new(current_user, params).update!
+    end
+
+    protected
+
+    def checkout_response_params
+      {
+        succeeded: [
+          main_app.project_contribution_path(
+            @contribution.project.permalink,
+            @contribution.id
+          ),
+          notice: t('success', scope: 'controllers.projects.contributions.pay')
+        ],
+        failed: [
+          main_app.edit_project_contribution_path(
+            @contribution.project.permalink,
+            @contribution.id
+          ),
+          alert: t('.errors.default')
+        ]
+      }.fetch(@payment.status)
     end
   end
 end
