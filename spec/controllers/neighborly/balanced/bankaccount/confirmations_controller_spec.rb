@@ -107,6 +107,12 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
       }
     end
 
+    it 'should receive authenticate_user!' do
+      verification.stub(:confirm)
+      expect(controller).to receive(:authenticate_user!)
+      post :create, params
+    end
+
     context 'when confirmation succeed' do
       it 'confirm bank account' do
         expect(verification).to receive(:confirm).with('1', '2')
