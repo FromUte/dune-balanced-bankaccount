@@ -34,7 +34,7 @@
 
           = f.button :submit, t('.submit'), data: { disable_with: t('.proccessing') }
         .large-6.columns
-          - if @contributions.present? && @contributions.any?
+          - if @contributions.present?
             h4 = t('.contributions.title')
             p = t('.contributions.subtitle')
 
