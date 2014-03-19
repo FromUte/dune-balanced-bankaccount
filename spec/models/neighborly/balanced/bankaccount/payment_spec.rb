@@ -40,38 +40,36 @@ describe Neighborly::Balanced::Bankaccount::Payment do
   end
 
   describe 'checkout' do
-    describe 'state' do
-      shared_examples 'updates contribution object' do
-        let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
+    shared_examples 'updates contribution object' do
+      let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
 
-        it 'debits customer on selected funding instrument' do
-          customer.should_receive(:debit).
-                   with(hash_including(source_uri: bank_account.uri)).
-                   and_return(debit)
-          subject.checkout!
-        end
+      it 'debits customer on selected funding instrument' do
+        customer.should_receive(:debit).
+                 with(hash_including(source_uri: bank_account.uri)).
+                 and_return(debit)
+        subject.checkout!
+      end
 
-        it 'defines given engine\'s name as payment method of the contribution' do
-          contribution.should_receive(:update_attributes).
-                       with(hash_including(payment_method: 'balanced-bankaccount'))
-          subject.checkout!
-        end
+      it 'defines given engine\'s name as payment method of the contribution' do
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_method: 'balanced-bankaccount'))
+        subject.checkout!
+      end
 
-        it 'saves paid fees on contribution object' do
-          calculator = double('FeeCalculator', fees: 0.42).as_null_object
-          subject.stub(:fee_calculator).and_return(calculator)
-          contribution.should_receive(:update_attributes).
-                       with(hash_including(payment_service_fee: 0.42))
-          subject.checkout!
-        end
+      it 'saves paid fees on contribution object' do
+        calculator = double('FeeCalculator', fees: 0.42).as_null_object
+        subject.stub(:fee_calculator).and_return(calculator)
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_service_fee: 0.42))
+        subject.checkout!
+      end
 
-        it 'saves who paid the fees' do
-          calculator = double('FeeCalculator', fees: 0.42).as_null_object
-          subject.stub(:fee_calculator).and_return(calculator)
-          contribution.should_receive(:update_attributes).
-                       with(hash_including(payment_service_fee_paid_by_user: '1'))
-          subject.checkout!
-        end
+      it 'saves who paid the fees' do
+        calculator = double('FeeCalculator', fees: 0.42).as_null_object
+        subject.stub(:fee_calculator).and_return(calculator)
+        contribution.should_receive(:update_attributes).
+                     with(hash_including(payment_service_fee_paid_by_user: '1'))
+        subject.checkout!
       end
     end
 
