@@ -13,7 +13,7 @@ account_path = -> do
 end
 
 begin
-  PaymentEngines.register(name:           'balanced-bankaccount',
+  PaymentEngine.register(name:            'balanced-bankaccount',
                           locale:         'en',
                           value_with_fees: value_with_fees,
                           review_path:    review_path,
