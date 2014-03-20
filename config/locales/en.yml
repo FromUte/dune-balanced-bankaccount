@@ -49,4 +49,4 @@ en:
               value: 'Contribution value: <strong>%{value}</strong>'
             errors:
               bank_account_not_found: "You don't have any bank account to confirm, please add one."
-              already_confirmed: 'Your Bank Account was already confirmed.'
+              already_confirmed: 'Your bank account has already been confirmed.'
