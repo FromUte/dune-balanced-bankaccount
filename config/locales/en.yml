@@ -37,7 +37,7 @@ en:
         confirmations:
           new:
             title: 'Confirm your bank account'
-            subtitle: 'Please enter the two amounts (in cents) we credited to your account. These can take up to three business days to appear in your account.'
+            subtitle: 'Please enter the two amounts (in cents) we credited to your account. These can take up to three business days to appear in your account. Payments will be charged and added to the campaign once your account has been confirmed.'
             remaining_attempts: 'Verification attempts remaining: %{value}'
             bank_account_number: 'Bank Account Number:'
             bank_name: 'Bank Name:'
@@ -45,7 +45,6 @@ en:
             proccessing: 'Proccessing'
             contributions:
               title: 'Pending contributions'
-              subtitle: 'Payments will be charged and added to the campaign once your account has been confirmed.'
               value: 'Contribution value: <strong>%{value}</strong>'
             errors:
               bank_account_not_found: "You don't have any bank account to confirm, please add one."
