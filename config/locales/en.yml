@@ -39,7 +39,7 @@ en:
             title: 'Confirm your bank account'
             subtitle: 'Please enter the two amounts (in cents) we credited to your account. These can take up to three business days to appear in your account. Payments will be charged and added to the campaign once your account has been confirmed.'
             remaining_attempts: 'Verification attempts remaining: %{value}'
-            bank_account_number: 'Bank Account Number:'
+            bank_account_number: 'Account Number:'
             bank_name: 'Bank Name:'
             submit: 'Confirm Bank Account'
             proccessing: 'Proccessing'
