@@ -53,4 +53,4 @@ en:
             messages:
               success: 'Successfully confirmed your bank account.'
               unnable_to_verify: 'Unable to verify. Please check the deposit amounts and enter them again.'
-              not_remaining_attempts: 'Your remaining attempts are sold out. We started a new verification process, that means we will try to deposit to your bank account again. Please check the deposit amounts in your bank and try it again.'
+              not_remaining_attempts: 'You have run out of verification attempts. We will begin a new verification process by making two (2) new deposits to your bank account. Please check the deposit amounts carefully and try again.'
