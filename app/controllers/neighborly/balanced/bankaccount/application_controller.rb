@@ -1,4 +1,4 @@
 module Neighborly::Balanced::Bankaccount
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ::ApplicationController
   end
 end

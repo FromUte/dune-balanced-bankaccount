@@ -13,3 +13,6 @@ en:
         bank_name: 'Bank Name'
         account_number: 'Account Number'
         account_type: 'Account Type'
+      confirmation:
+        amount_1: 'First Amount'
+        amount_2: 'Second Amount'

@@ -1,5 +1,5 @@
 module Neighborly::Balanced::Bankaccount
-  class RoutingNumbersController < ActionController::Base
+  class RoutingNumbersController < ApplicationController
 
     def show
       routing_number = RoutingNumber.where(number: params[:id]).first
