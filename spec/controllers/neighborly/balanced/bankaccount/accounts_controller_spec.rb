@@ -15,6 +15,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     ::Balanced::BankAccount.stub_chain(:find, :verify)
+    controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
 
@@ -43,6 +44,11 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       get :new, contribution_id: 42
       expect(assigns(:customer)).to eq customer
     end
+
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
+      get :new
+    end
   end
 
   describe 'POST create' do
@@ -54,6 +60,11 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           'user'            => {}
         },
       }
+    end
+
+    it 'should receive authenticate_user!' do
+      expect(controller).to receive(:authenticate_user!)
+      post :create, params
     end
 
     context 'successful' do
