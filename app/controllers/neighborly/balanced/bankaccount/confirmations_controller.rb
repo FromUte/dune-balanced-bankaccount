@@ -47,7 +47,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def bank_account
-      @bank_account ||= customer.bank_accounts.try(:first)
+      @bank_account ||= customer.bank_accounts.try(:last)
     end
 
     def customer
