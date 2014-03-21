@@ -33,13 +33,13 @@ module Neighborly::Balanced::Bankaccount
       if bank_account
         if verification.try(:state) == 'verified'
           flash.alert = t('.errors.already_confirmed')
-          error = true
+          has_errors = true
         end
       else
         flash.alert = t('.errors.bank_account_not_found')
-        error = true
+        has_errors = true
       end
-      redirect_to main_app.payments_user_path(current_user) if error == true
+      redirect_to main_app.payments_user_path(current_user) if has_errors
     end
 
     def verification
