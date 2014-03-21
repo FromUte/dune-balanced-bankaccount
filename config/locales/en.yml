@@ -52,5 +52,5 @@ en:
           create:
             messages:
               success: 'Successfully confirmed your bank account.'
-              unnable_to_verify: 'Unable to verify. Please check the deposit amounts and enter them again.'
+              unable_to_verify: 'Unable to verify. Please check the deposit amounts and enter them again.'
               not_remaining_attempts: 'You have run out of verification attempts. We will begin a new verification process by making two (2) new deposits to your bank account. Please check the deposit amounts carefully and try again.'

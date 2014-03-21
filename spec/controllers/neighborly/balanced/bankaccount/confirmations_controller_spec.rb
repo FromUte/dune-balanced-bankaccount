@@ -138,19 +138,19 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
           and_raise(Balanced::BankAccountVerificationFailure.new({}))
       end
 
-      context 'with has remaining attempts' do
+      context 'with remaining attempts' do
         it 'should redirect to new confirmation page' do
           post :create, params
           expect(response).to redirect_to(new_confirmation_path)
         end
 
-        it 'should set a flash message' do
+        it 'should alert the user about the error' do
           post :create, params
-          expect(flash.alert).to eq I18n.t('messages.unnable_to_verify', scope: i18n_scope)
+          expect(flash.alert).to eq I18n.t('messages.unable_to_verify', scope: i18n_scope)
         end
       end
 
-      context 'with do not have remaining attempts' do
+      context 'with do no remaining attempts' do
         before do
           verification.stub(:remaining_attempts).and_return(0)
         end
@@ -166,7 +166,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
           expect(response).to redirect_to(new_confirmation_path)
         end
 
-        it 'should set a flash message' do
+        it 'should alert the user about the error' do
           customer.bank_accounts.first.stub(:verify)
           post :create, params
           expect(flash.alert).to eq I18n.t('messages.not_remaining_attempts', scope: i18n_scope)
