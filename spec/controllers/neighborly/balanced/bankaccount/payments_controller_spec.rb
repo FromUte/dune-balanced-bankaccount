@@ -6,7 +6,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   let(:current_user) { double('User').as_null_object }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uid: '/ABANK')],
+           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK')],
            uri:           '/qwertyuiop').as_null_object
   end
 

@@ -6,7 +6,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
   let(:current_user) { double('User').as_null_object }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uid: '/ABANK')],
+           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK')],
            uri:           '/qwertyuiop').as_null_object
   end
 
@@ -81,7 +81,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     describe 'insertion of bank account to a customer' do
       let(:customer) { double('::Balanced::Customer').as_null_object }
       let(:bank) do
-        double('::Balanced::BankAccount', uid: params['payment']['use_bank'])
+        double('::Balanced::BankAccount', uri: params['payment']['use_bank'])
       end
       before do
         controller.stub(:customer).and_return(customer)
@@ -93,7 +93,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
 
         it "inserts to customer's bank accounts list" do
-          expect(customer).to receive(:add_bank_account).with(bank.uid)
+          expect(customer).to receive(:add_bank_account).with(bank.uri)
           post :create, params
         end
       end
@@ -111,7 +111,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
 
       context 'customer has other bank account' do
         let(:bank) do
-          double('::Balanced::BankAccount', uid: '/OLD_BANK')
+          double('::Balanced::BankAccount', uri: '/OLD_BANK')
         end
 
         before do
