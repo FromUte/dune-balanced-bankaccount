@@ -6,7 +6,6 @@ en:
           new:
             bankaccount:
               title: 'Checkout using a Bank Account'
-              subtitle: 'You may only store one account at a time. Adding a new account will replace your existing one.'
             billing:
               title: 'Billing Information'
             terms: 'By contributing, I agree with the %{link}.'
@@ -17,8 +16,8 @@ en:
               bank_error: 'The Bank Account submitted is invalid.'
               routing_number: 'The Routing Number is invalid.'
             bank_accounts:
-              title: 'Accounts'
-              bank_name: 'Bank Name'
+              title: 'My Bank Account'
+              subtitle: 'You may only store one account at a time. Adding a new account will replace your existing one.'
         accounts:
           create:
             success: 'Your bank account was successfully updated.'

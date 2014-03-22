@@ -4,69 +4,69 @@
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
-    section.highlighted.row
-      .large-12.columns.title
-        h4 = t('.bankaccount.title')
-        - if @bank_account
-          p = t('.bankaccount.subtitle')
+    section.highlighted[class="#{'use-existing-item' if @bank_account.present?}"]
 
       - if @bank_account
-        .use-previously-bank
+        section.use-existing-item.row
+          .large-12.columns.title
+            h4 = t('.bank_accounts.title')
+            p = t('.bank_accounts.subtitle')
+
           .large-12.columns
-            .row
-              .large-7.columns
-                h5 = t('.bank_accounts.title')
-              .large-5.columns
-                h6 = t('.bank_accounts.bank_name')
-          .large-12.columns
-            .row
-              .large-12.columns
-                label.bank-box
-                  .row
-                    .large-1.columns
-                      = f.radio_button :use_bank, @bank_account.uri, { class: 'use-bank', checked: true, label: false }
-                    .large-6.columns
-                      = @bank_account.account_number
-                    .large-5.columns.bank_name
-                      = @bank_account.bank_name
+            .bank-box
+              label.row
+                dl
+                  .large-1.columns
+                    = f.radio_button :use_bank, @bank_account.uri, { class: 'use-bank', checked: true, label: false }
+                  .large-5.columns
+                    dt.hide
+                    dd = @bank_account.account_number
+                  .large-6.columns.bank_name
+                    dt.hine
+                    dd = @bank_account.bank_name
       - else
           = f.input :use_bank, as: :hidden
+          .row
+            .large-12.columns.title
+              h4 = t('.bankaccount.title')
 
+    section.row
       .large-12.columns
-        .row
-          .large-12.columns
-            label.bank-box[class="#{'new-bank' unless @bank_account.present?}"]
-              .row
-                - if @bank_account.present?
+        .bank-box[class="#{'new-bank' unless @bank_account.present?}"]
+           .row
+             - if @bank_account.present?
+               label
                   .large-1.columns
                     = f.radio_button :use_bank, 'new', { class: 'use-bank', checked: false, label: false }
                   .large-8.columns
                     = t('.replace_bank')
                   .large-3.columns.bank_name
 
-                .large-12.columns.add-new-bankaccount-form[class="#{'hide with-other-bank' if @bank_account.present?}"]
+             .add-new-bankaccount-form[class="#{'hide with-other-bank' if @bank_account.present?}"]
+                .large-12.columns.check-numbers
+                  = image_tag('payments/check-numbers.png')
+                .large-12.columns
                   .row
-                    .large-12.columns.check-numbers
-                      = image_tag('payments/check-numbers.png')
-                    .large-12.columns
-                      = f.input :account_holder_name, input_html: { 'data-balanced-bank-account-input' => '' }
-
-                    .large-6.small-6.columns
-                      = f.input :routing_number, input_html: { 'data-balanced-bank-account-input' => '' }
-
-                    .large-6.small-6.columns
-                      = f.input :bank_name, disabled: true, input_html: { 'data-balanced-bank-account-input' => '' }
-
                     .large-8.columns
-                      = f.input :account_number, input_html: { 'data-balanced-bank-account-input' => '' }
+                      = f.input :account_holder_name, input_html: { 'data-balanced-bank-account-input' => '' }
 
                     .large-4.columns
                       = f.input :account_type, as: :radio_buttons, collection: [['Checking', 'checking'], ['Savings', 'savings']], checked: 'checking'
 
-      .user-informations
-        = f.simple_fields_for :user do |fu|
+                  .row
+                    .large-3.columns
+                      = f.input :routing_number, input_html: { 'data-balanced-bank-account-input' => '' }
+
+                    .large-4.columns
+                      = f.input :account_number, input_html: { 'data-balanced-bank-account-input' => '' }
+
+                    .large-5.columns
+                      = f.input :bank_name, disabled: true, input_html: { 'data-balanced-bank-account-input' => '' }
+
+    section.user-informations.highlighted
+      = f.simple_fields_for :user do |fu|
+        .row
           .large-12.columns.title
-            hr
             h4 = t('.billing.title')
 
           .large-12.columns
@@ -81,7 +81,7 @@
                 = fu.input :address_state, as: :select, collection: State.array, selected: @customer.address.try(:[], :state), include_blank: false
               .large-3.columns
                 = fu.input :address_zip_code, input_html: { value: @customer.address.try(:[], :postal_code) }
-
+    section.row
       .large-12.columns.terms
         = t('.terms', link: link_to(t('.terms-link'), main_app.terms_path(), data: { 'reveal-id' => 'terms-modal', 'reveal-ajax' => true })).html_safe
 
