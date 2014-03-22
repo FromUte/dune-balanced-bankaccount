@@ -23,7 +23,7 @@
                 label.bank-box
                   .row
                     .large-1.columns
-                      = f.radio_button :use_bank, @bank_account.uri, { checked: true, label: false }
+                      = f.radio_button :use_bank, @bank_account.uri, { class: 'use-bank', checked: true, label: false }
                     .large-6.columns
                       = @bank_account.account_number
                     .large-5.columns.bank_name
@@ -38,7 +38,7 @@
               .row
                 - if @bank_account.present?
                   .large-1.columns
-                    = f.radio_button :use_bank, 'new', { checked: false, label: false }
+                    = f.radio_button :use_bank, 'new', { class: 'use-bank', checked: false, label: false }
                   .large-8.columns
                     = t('.replace_bank')
                   .large-3.columns.bank_name
