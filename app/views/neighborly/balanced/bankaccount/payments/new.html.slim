@@ -4,10 +4,11 @@
   = simple_form_for :payment, url: payments_path, html: { novalidate: '' } do |f|
     = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
-    .row
+    section.highlighted.row
       .large-12.columns.title
         h4 = t('.bankaccount.title')
-        p = t('.bankaccount.subtitle')
+        - if @bank_account
+          p = t('.bankaccount.subtitle')
 
       - if @bank_account
         .use-previously-bank
@@ -67,7 +68,6 @@
           .large-12.columns.title
             hr
             h4 = t('.billing.title')
-            p = t('.billing.subtitle')
 
           .large-12.columns
             = fu.input :name, input_html: { value: @customer.name }
