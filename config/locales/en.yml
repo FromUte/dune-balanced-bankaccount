@@ -6,20 +6,18 @@ en:
           new:
             bankaccount:
               title: 'Checkout using a Bank Account'
-              subtitle: 'Lorem ipsum dolor sit amet'
             billing:
               title: 'Billing Information'
-              subtitle: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
-            terms: 'By contributing to this project I agree with the %{link}.'
-            terms-link: 'Terms & Conditions of Use'
+            terms: 'By contributing, I agree with the %{link}.'
+            terms-link: 'Terms of Use'
             confirm: 'Confirm payment'
             proccessing: 'Processing...'
             errors:
               bank_error: 'The Bank Account submitted is invalid.'
               routing_number: 'The Routing Number is invalid.'
             bank_accounts:
-              title: 'Accounts'
-              bank_name: 'Bank Name'
+              title: 'My Bank Account'
+              subtitle: 'You may only store one account at a time. Adding a new account will replace your existing one.'
         accounts:
           create:
             success: 'Your bank account was successfully updated.'

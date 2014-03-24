@@ -33,15 +33,20 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
                             data('routing-number-path').
                             replace('id', this.$('#payment_routing_number').val())
 
+    error_handler = ->
+      that.Flash.message('<%= I18n.t('neighborly.balanced.bankaccount.payments.new.errors.routing_number') %>')
+      $.rails.enableFormElements($('.neighborly-balanced-bankaccount-form'))
+      $submit = $('.neighborly-balanced-bankaccount-form input[type=submit]')
+      $submit.val($submit.data('enable-with'))
+
     $.getJSON routing_number_path, (response) ->
       if response.ok
         that.Flash.remove()
         that.submitToBalanced(selectedBank)
       else
-        that.Flash.message('<%= I18n.t('neighborly.balanced.bankaccount.payments.new.errors.routing_number') %>')
-        $.rails.enableFormElements($('.neighborly-balanced-bankaccount-form'))
-        $submit = $('.neighborly-balanced-bankaccount-form input[type=submit]')
-        $submit.val($submit.data('enable-with'))
+        error_handler()
+    .error ->
+      error_handler()
 
   submitToBalanced: (selectedBank) ->
     $.rails.disableFormElements($('.neighborly-balanced-bankaccount-form'))
