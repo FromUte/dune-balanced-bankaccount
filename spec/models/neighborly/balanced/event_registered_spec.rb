@@ -14,7 +14,7 @@ describe Neighborly::Balanced::EventRegistered do
 
       it 'generates \'confirm_bank_account\' notification' do
         expect(Notification).to receive(:notify).
-          with('confirm_bank_account', anything)
+          with('balanced/bankaccount/confirm_bank_account', anything)
         subject.confirm(event)
       end
     end
