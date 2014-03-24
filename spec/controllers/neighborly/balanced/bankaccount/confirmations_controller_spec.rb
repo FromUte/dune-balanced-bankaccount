@@ -9,7 +9,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
                                 remaining_attempts: 2) }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uid: '/ABANK',
+           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK',
                                   verifications: [verification]
                                  )],
            uri:           '/qwertyuiop').as_null_object
