@@ -4,7 +4,7 @@ describe Neighborly::Balanced::Bankaccount::DelayedPayment do
   let(:customer)     { double('::Balanced::Customer') }
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
-  let(:attributes)   { { use_bank: bank_account.uri } }
+  let(:attributes)   { { pay_fee: '1', use_bank: bank_account.uri } }
   subject do
     described_class.new('balanced-bankaccount',
                         customer,
@@ -15,6 +15,28 @@ describe Neighborly::Balanced::Bankaccount::DelayedPayment do
   describe 'checkout' do
     it 'authorizes payment of contribution' do
       expect(contribution).to receive(:authorize_payment!)
+      subject.checkout!
+    end
+
+    it 'defines given engine\'s name as payment method of the contribution' do
+      contribution.should_receive(:update_attributes).
+                   with(hash_including(payment_method: 'balanced-bankaccount'))
+      subject.checkout!
+    end
+
+    it 'saves paid fees on contribution object' do
+      calculator = double('FeeCalculator', fees: 0.42).as_null_object
+      subject.stub(:fee_calculator).and_return(calculator)
+      contribution.should_receive(:update_attributes).
+                   with(hash_including(payment_service_fee: 0.42))
+      subject.checkout!
+    end
+
+    it 'saves who paid the fees' do
+      calculator = double('FeeCalculator', fees: 0.42).as_null_object
+      subject.stub(:fee_calculator).and_return(calculator)
+      contribution.should_receive(:update_attributes).
+                   with(hash_including(payment_service_fee_paid_by_user: '1'))
       subject.checkout!
     end
   end

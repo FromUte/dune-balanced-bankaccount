@@ -1,7 +1,14 @@
 module Neighborly::Balanced::Bankaccount
   class DelayedPayment < PaymentBase
     def checkout!
-      @contribution.authorize_payment! and @status = :succeeded
+      @contribution.authorize_payment!
+
+      @status = :succeeded
+      @contribution.update_attributes(
+        payment_method:                   @engine_name,
+        payment_service_fee:              fee_calculator.fees,
+        payment_service_fee_paid_by_user: @attrs[:pay_fee]
+      )
     end
 
     def successful?
