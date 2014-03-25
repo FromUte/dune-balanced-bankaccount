@@ -14,7 +14,7 @@ describe Neighborly::Balanced::Bankaccount::DelayedPayment do
 
   describe 'checkout' do
     it 'authorizes payment of contribution' do
-      expect(contribution).to receive(:waiting!)
+      expect(contribution).to receive(:wait_confirmation!)
       subject.checkout!
     end
 
