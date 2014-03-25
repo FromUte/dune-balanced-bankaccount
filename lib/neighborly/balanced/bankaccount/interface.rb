@@ -12,7 +12,7 @@ module Neighborly::Balanced::Bankaccount
 
     def account_path
       Neighborly::Balanced::Bankaccount::Engine.
-        routes.url_helpers.new_account_path()
+        routes.url_helpers.new_account_path
     end
 
     def fee_calculator(value)
