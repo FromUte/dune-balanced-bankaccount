@@ -1,7 +1,7 @@
 module Neighborly::Balanced::Bankaccount
   class DelayedPayment < PaymentBase
     def checkout!
-      @contribution.authorize_payment!
+      @contribution.wait_confirmation!
 
       @status = :succeeded
       @contribution.update_attributes(

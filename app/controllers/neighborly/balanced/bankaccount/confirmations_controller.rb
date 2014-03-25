@@ -5,7 +5,7 @@ module Neighborly::Balanced::Bankaccount
 
     def new
       @verification  = verification
-      @contributions = current_user.contributions.with_state(:payment_authorized)
+      @contributions = current_user.contributions.with_state(:waiting_confirmation)
       render layout: 'application'
     end
 
