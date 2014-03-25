@@ -6,13 +6,14 @@ module Neighborly::Balanced::Bankaccount
     sidekiq_options retry: true
 
     def perform(contributor_id)
+      contributor = Neighborly::Balanced::Contributor.find(contributor_id)
       DelayedPaymentProcessing.new(
-        waiting_confirmation_contributions(contributor_id)
+        contributor,
+        waiting_confirmation_contributions(contributor)
       ).complete
     end
 
-    def waiting_confirmation_contributions(contributor_id)
-      contributor = Neighborly::Balanced::Contributor.find(contributor_id)
+    def waiting_confirmation_contributions(contributor)
       contributor.user.contributions.
         with_state(:waiting_confirmation).
         where(payment_method: 'balanced-bankaccount')

@@ -3,6 +3,9 @@ require 'spec_helper'
 describe Neighborly::Balanced::Bankaccount::DebitAuthorizedContributionsWorker do
   let(:contributor) { double('Contributor', id: 45, user_id: user.id) }
   let(:user)        { double('User', id: 42) }
+  before do
+    Neighborly::Balanced::Contributor.stub(:find).and_return(contributor)
+  end
 
   describe 'performation' do
     let(:contributions) do
@@ -19,7 +22,7 @@ describe Neighborly::Balanced::Bankaccount::DebitAuthorizedContributionsWorker d
     it 'completes payments of all contributions waiting confirmation' do
       Neighborly::Balanced::Bankaccount::DelayedPaymentProcessing.
         stub(:new).
-        with(contributions).
+        with(contributor, contributions).
         and_return(payment_processing)
       expect(payment_processing).to receive(:complete)
       subject.perform(contributor.id)
