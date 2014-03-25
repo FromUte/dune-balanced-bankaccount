@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Interface do
-  subject { Neighborly::Balanced::Bankaccount::Interface.new }
   let(:contribution) { double('Contribution', id: 42) }
 
   it 'should return the engine name' do
