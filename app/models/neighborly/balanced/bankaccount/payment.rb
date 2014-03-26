@@ -1,8 +1,8 @@
 module Neighborly::Balanced::Bankaccount
   class Payment < PaymentBase
     def checkout!
-      @debit  = @customer.debit(amount:     contribution_amount_in_cents,
-                                source_uri: @attrs.fetch(:use_bank))
+      @debit = @customer.debit(amount:     contribution_amount_in_cents,
+                               source_uri: debit_resource_uri)
       @contribution.confirm!
     rescue Balanced::BadRequest
       @status = :failed
@@ -18,6 +18,14 @@ module Neighborly::Balanced::Bankaccount
 
     def successful?
       %i(pending succeeded).include? status
+    end
+
+    def debit_resource_uri
+      @attrs.fetch(:use_bank) { contributor.bank_account_uri }
+    end
+
+    def contributor
+      @contributor ||= Neighborly::Balanced::Contributor.find_by(uri: @customer.uri)
     end
   end
 end

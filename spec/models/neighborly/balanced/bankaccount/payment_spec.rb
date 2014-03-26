@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Payment do
-  let(:customer)     { double('::Balanced::Customer') }
+  let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
@@ -41,13 +41,30 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
   describe 'checkout' do
     shared_examples 'updates contribution object' do
-      let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
+      let(:attributes)  { { pay_fee: '1', use_bank: bank_account.uri } }
 
-      it 'debits customer on selected funding instrument' do
-        customer.should_receive(:debit).
-                 with(hash_including(source_uri: bank_account.uri)).
-                 and_return(debit)
-        subject.checkout!
+      context 'when a source_uri is provided' do
+        it 'debits customer on selected funding instrument' do
+          customer.should_receive(:debit).
+                   with(hash_including(source_uri: bank_account.uri)).
+                   and_return(debit)
+          subject.checkout!
+        end
+      end
+
+      context 'when no source_uri is provided' do
+        let(:contributor) do
+          double('Neighborly::Balanced::Contributor', bank_account_uri: '/MY-DEFAULT-BANK')
+        end
+        let(:attributes) { { pay_fee: '1' } }
+        before { subject.stub(:contributor).and_return(contributor) }
+
+        it 'debits customer on default funding instrument' do
+          customer.should_receive(:debit).
+                   with(hash_including(source_uri: contributor.bank_account_uri)).
+                   and_return(debit)
+          subject.checkout!
+        end
       end
 
       it 'defines given engine\'s name as payment method of the contribution' do
