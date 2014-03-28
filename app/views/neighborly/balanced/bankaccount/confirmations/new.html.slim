@@ -18,6 +18,7 @@
                 | &nbsp;
                 = @bank_account.bank_name
 
+          .row
             .large-7.columns
               .row
                 .large-6.columns
@@ -34,9 +35,6 @@
                       span.prefix $0.
                     .large-8.columns
                       = f.input :amount_2, label: false, placeholder: '00', input_html: { class: 'with-prefix' }
-            .large-5.columns
-              - if @verification.remaining_attempts < 3
-                .remaining-attempts = t('.remaining_attempts', value: @verification.remaining_attempts)
           = f.button :submit, t('.submit'), data: { disable_with: t('.proccessing') }
         section.pending-contributions.large-4.columns
           - if @contributions.present?

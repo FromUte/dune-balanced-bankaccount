@@ -152,7 +152,9 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
 
       context 'with do no remaining attempts' do
         before do
-          verification.stub(:remaining_attempts).and_return(0)
+          # Balanced does not decrease Verification#remaining_attempts
+          # after a fail attempt
+          verification.stub(:remaining_attempts).and_return(1)
         end
 
         it 'should start a new verification' do
