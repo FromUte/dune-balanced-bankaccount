@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Neighborly::Balanced::Bankaccount::AccountsController do
   routes { Neighborly::Balanced::Bankaccount::Engine.routes }
 
-  let(:current_user) { double('User').as_null_object }
+  let(:current_user) { double('User', id: 42).as_null_object }
   let(:customer) do
     double('::Balanced::Customer',
            bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK')],
@@ -79,12 +79,17 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     end
 
     describe 'insertion of bank account to a customer' do
+      let(:contributor) do
+          double('Neighborly::Balanced::Contributor').as_null_object
+        end
       let(:customer) { double('::Balanced::Customer').as_null_object }
       let(:bank) do
         double('::Balanced::BankAccount', uri: params['payment']['use_bank'])
       end
       before do
         controller.stub(:customer).and_return(customer)
+        Neighborly::Balanced::Contributor.stub(:find_or_create_by).
+          and_return(contributor)
       end
 
       context "customer doesn't have the given bank" do
@@ -94,6 +99,22 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
 
         it "inserts to customer's bank accounts list" do
           expect(customer).to receive(:add_bank_account).with(bank.uri)
+          post :create, params
+        end
+
+        it 'creates a Balanced::Contributor for the user' do
+          expect(
+            Neighborly::Balanced::Contributor
+          ).to receive(:find_or_create_by).
+                 with(user_id: current_user.id).
+                 and_return(contributor)
+          post :create, params
+        end
+
+        it 'updates Balanced::Contributor\'s bank_account_uri' do
+          expect(
+            contributor
+          ).to receive(:update_attributes).with(bank_account_uri: '/ABANK')
           post :create, params
         end
       end
@@ -111,7 +132,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
 
       context 'customer has other bank account' do
         let(:bank) do
-          double('::Balanced::BankAccount', uri: '/OLD_BANK')
+          double('::Balanced::BankAccount', uri: '/OLD_BANK').as_null_object
         end
 
         before do
@@ -121,6 +142,13 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         it 'unstores the other bank' do
           expect(customer).to receive(:add_bank_account)
           expect(bank).to receive(:unstore)
+          post :create, params
+        end
+
+        it 'updates Balanced::Contributor\'s bank_account_uri' do
+          expect(
+            contributor
+          ).to receive(:update_attributes).with(bank_account_uri: '/ABANK')
           post :create, params
         end
       end
@@ -134,7 +162,6 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           expect(::Balanced::BankAccount.find).to receive(:verify)
           post :create, params
         end
-
       end
     end
   end
