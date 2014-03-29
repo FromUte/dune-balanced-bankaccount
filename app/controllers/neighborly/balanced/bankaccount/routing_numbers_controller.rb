@@ -1,5 +1,6 @@
 module Neighborly::Balanced::Bankaccount
   class RoutingNumbersController < ApplicationController
+    skip_before_filter :force_http
 
     def show
       routing_number = RoutingNumber.where(number: params[:id]).first
