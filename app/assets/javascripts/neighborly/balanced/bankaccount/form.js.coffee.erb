@@ -42,6 +42,8 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
     $.getJSON routing_number_path, (response) ->
       if response.ok
         that.Flash.remove()
+        that.$('.simple_form.payment').attr('novalidate', '')
+
         that.submitToBalanced(selectedBank)
       else
         error_handler()
