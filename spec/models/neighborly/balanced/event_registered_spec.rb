@@ -3,7 +3,9 @@ require 'spec_helper'
 describe Neighborly::Balanced::EventRegistered do
   let(:user) { double('User') }
   let(:event) do
-    double('Neighborly::Balanced::Event', uri: '/MYEVENT', user: user)
+    double('Neighborly::Balanced::Event',
+           entity_uri: '/verifications/MYEVENT',
+           user:       user)
   end
 
   describe 'confirmation' do
@@ -26,7 +28,9 @@ describe Neighborly::Balanced::EventRegistered do
       end
 
       it 'confirms the bank account verification' do
-        Neighborly::Balanced::Bankaccount::Verification.stub(:find).with('/MYEVENT').and_return(verification)
+        Neighborly::Balanced::Bankaccount::Verification.stub(:find).
+          with('/verifications/MYEVENT').
+          and_return(verification)
         expect(verification).to receive(:confirm)
         subject.confirm(event)
       end
