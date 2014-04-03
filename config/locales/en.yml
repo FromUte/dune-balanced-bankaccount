@@ -20,7 +20,7 @@ en:
               subtitle: 'You may only store one account at a time. Adding a new account will replace your existing one.'
         accounts:
           create:
-            success: 'Your bank account was successfully updated.'
+            success: 'Bank account successfully updated. We have started a new verification process, please check your email for next steps.'
           new:
             bankaccount:
               title: 'My Bank Account'
