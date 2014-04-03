@@ -19,6 +19,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
+    Notification.stub(:notify)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
@@ -159,6 +160,13 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
 
         it 'should start a new verification' do
           expect(customer.bank_accounts.first).to receive(:verify)
+          post :create, params
+        end
+
+        it 'notify user about new verification process started' do
+          customer.bank_accounts.first.stub(:verify)
+          expect(Notification).to receive(:notify).
+            with('balanced/bankaccount/new_verification_started', anything)
           post :create, params
         end
 
