@@ -23,12 +23,18 @@ module Neighborly::Balanced::Bankaccount
         Neighborly::Balanced::Contributor.
           find_or_create_by(user_id: current_user.id).
           update_attributes(bank_account_uri: new_bank_account_uri)
+        notify_user_about_replacement
         unstore_all_bank_accounts
         # Not calling #reload raises Balanced::ConflictError when attaching a
         # new card after unstoring others.
         customer.reload.add_bank_account(new_bank_account_uri)
         verify_bank_account(new_bank_account_uri)
       end
+    end
+
+    def notify_user_about_replacement
+      Notification.notify('balanced/bankaccount/bank_account_replaced',
+                          current_user) if customer_bank_accounts.any?
     end
 
     def verify_bank_account(bank_account)

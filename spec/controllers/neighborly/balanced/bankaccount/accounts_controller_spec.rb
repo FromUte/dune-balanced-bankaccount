@@ -15,6 +15,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
     ::Balanced::Customer.stub(:new).and_return(customer)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     ::Balanced::BankAccount.stub_chain(:find, :verify)
+    Notification.stub(:notify)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
   end
@@ -74,7 +75,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       end
 
       it 'set flash message' do
-        expect(flash[:success]).to eq 'Your bank account was successfully updated.'
+        expect(flash[:success]).to eq 'Bank account successfully updated. We have started a new verification process, please check your email for next steps.'
       end
     end
 
@@ -86,6 +87,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       let(:bank) do
         double('::Balanced::BankAccount', uri: params['payment']['use_bank'])
       end
+
       before do
         controller.stub(:customer).and_return(customer)
         Neighborly::Balanced::Contributor.stub(:find_or_create_by).
@@ -99,6 +101,11 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
 
         it "inserts to customer's bank accounts list" do
           expect(customer).to receive(:add_bank_account).with(bank.uri)
+          post :create, params
+        end
+
+        it 'skips notification to user about replaced bank account' do
+          expect(Notification).not_to receive(:notify)
           post :create, params
         end
 
@@ -149,6 +156,12 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           expect(
             contributor
           ).to receive(:update_attributes).with(bank_account_uri: '/ABANK')
+          post :create, params
+        end
+
+        it 'notify user about replaced bank account' do
+          expect(Notification).to receive(:notify).
+            with('balanced/bankaccount/bank_account_replaced', anything)
           post :create, params
         end
       end
