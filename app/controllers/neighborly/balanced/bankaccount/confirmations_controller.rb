@@ -28,8 +28,14 @@ module Neighborly::Balanced::Bankaccount
     def check_for_remaining_attempts
       if @remaining_attempts.zero?
         flash.alert = t('.messages.not_remaining_attempts')
-        bank_account.verify
+        create_new_verification
       end
+    end
+
+    def create_new_verification
+      bank_account.verify
+      Notification.notify('balanced/bankaccount/new_verification_started',
+                          current_user)
     end
 
     def check_bank_account_availability
