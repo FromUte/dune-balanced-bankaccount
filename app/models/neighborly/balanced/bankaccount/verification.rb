@@ -19,7 +19,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def contributor
-      Contributor.find_by(bank_account_uri: bank_account_uri)
+      Neighborly::Balanced::Contributor.find_by(bank_account_uri: bank_account_uri)
     end
 
     def confirm
