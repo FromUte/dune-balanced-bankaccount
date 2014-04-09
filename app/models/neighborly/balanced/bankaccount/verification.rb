@@ -23,7 +23,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def confirm
-      DebitAuthorizedContributionsWorker.perform_async(self.id)
+      DebitAuthorizedContributionsWorker.perform_async(contributor.id)
     end
 
     # Delegate instance methods to Balanced::Verification object
