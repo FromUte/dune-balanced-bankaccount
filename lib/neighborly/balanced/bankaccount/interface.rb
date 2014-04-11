@@ -19,5 +19,9 @@ module Neighborly::Balanced::Bankaccount
       TransactionAdditionalFeeCalculator.new(value)
     end
 
+    def payout_class
+      Neighborly::Balanced::Payout
+    end
+
   end
 end
