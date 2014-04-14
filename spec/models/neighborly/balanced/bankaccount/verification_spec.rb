@@ -1,10 +1,15 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Verification do
-  let(:balanced_verification) { double('Balanced::Verification', id: 'VERIFICATION-ID') }
+  let(:balanced_verification) do
+    double('Balanced::Verification',
+      id:  'VERIFICATION-ID',
+      uri: '/v1/xxxxxxxxxxxxxx/verifications/VERIFICATION-ID'
+    )
+  end
   let(:user)                  { double('User') }
   let(:contributor) do
-    double('Neighborly::Balanced::Contributor', user: user)
+    double('Neighborly::Balanced::Contributor', id: 43, user: user)
   end
   subject { described_class.new(balanced_verification) }
 
@@ -19,9 +24,10 @@ describe Neighborly::Balanced::Bankaccount::Verification do
 
   describe 'confirmation' do
     it 'performs call to Bankaccount::DebitAuthorizedContributionsWorker' do
+      subject.stub(:contributor).and_return(contributor)
       expect(
         Neighborly::Balanced::Bankaccount::DebitAuthorizedContributionsWorker
-      ).to receive(:perform_async).with(balanced_verification.id)
+      ).to receive(:perform_async).with(contributor.id)
       subject.confirm
     end
   end

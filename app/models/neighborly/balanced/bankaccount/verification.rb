@@ -19,11 +19,11 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def contributor
-      Contributor.find_by(bank_account_uri: bank_account_uri)
+      Neighborly::Balanced::Contributor.find_by(bank_account_uri: bank_account_uri)
     end
 
     def confirm
-      DebitAuthorizedContributionsWorker.perform_async(self.id)
+      DebitAuthorizedContributionsWorker.perform_async(contributor.id)
     end
 
     # Delegate instance methods to Balanced::Verification object
