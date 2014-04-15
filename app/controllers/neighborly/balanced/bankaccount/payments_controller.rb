@@ -27,8 +27,7 @@ module Neighborly::Balanced::Bankaccount
           main_app.project_contribution_path(
             @contribution.project.permalink,
             @contribution.id
-          ),
-          notice: t('success', scope: 'controllers.projects.contributions.pay')
+          )
         ],
         failed: [
           main_app.edit_project_contribution_path(
