@@ -15,7 +15,9 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def bank_account_uri
-      uri.match(/\A(?<bank_account_uri>.+)\/verifications/)[:bank_account_uri]
+      account_uri = uri.match(/\A(?<bank_account_uri>\/.+\/bank_accounts\/.+)\/verifications/)[:bank_account_uri]
+      account_uri['/bank_accounts'] = "/marketplaces/#{Configuration[:balanced_marketplace_id]}/bank_accounts"
+      account_uri
     end
 
     def contributor
