@@ -132,6 +132,16 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         subject.checkout!
       end
     end
+
+    context 'when a description is provided to debit' do
+      it 'defines description on debit' do
+        contribution.stub_chain(:project, :name).and_return('Awesome Project')
+        customer.should_receive(:debit).
+                 with(hash_including(description: 'Contribution to Awesome Project')).
+                 and_return(debit)
+        subject.checkout!
+      end
+    end
   end
 
   describe 'status' do
