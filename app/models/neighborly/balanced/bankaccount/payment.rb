@@ -4,7 +4,8 @@ module Neighborly::Balanced::Bankaccount
       @debit = @customer.debit(amount:     contribution_amount_in_cents,
                                source_uri: debit_resource_uri,
                                appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                               description: debit_description)
+                               description: debit_description,
+                               on_behalf_of_uri: project_owner_customer.uri)
       @contribution.confirm!
     rescue Balanced::BadRequest
       @status = :failed
@@ -34,6 +35,11 @@ module Neighborly::Balanced::Bankaccount
     def debit_description
       I18n.t('neighborly.balanced.bankaccount.payments.debit.description',
              project_name: @contribution.try(:project).try(:name))
+    end
+
+    def project_owner_customer
+      @project_owner_customer ||= Neighborly::Balanced::Customer.new(
+        @contribution.project.user, {}).fetch
     end
   end
 end
