@@ -32,7 +32,7 @@ module Neighborly::Balanced::Bankaccount
 
     private
     def debit_description
-      I18n.t('neighborly.balanced.bankaccount.payments.dedit.description',
+      I18n.t('neighborly.balanced.bankaccount.payments.debit.description',
              project_name: @contribution.try(:project).try(:name))
     end
   end

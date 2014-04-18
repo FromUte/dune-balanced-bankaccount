@@ -3,7 +3,7 @@ en:
     balanced:
       bankaccount:
         payments:
-          dedit:
+          debit:
             description: 'Contribution to %{project_name}'
           new:
             bankaccount:
