@@ -100,6 +100,18 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         subject.checkout!
       end
 
+      context 'when a appears_on_statement_as is provided on debit' do
+        it 'defines appears_on_statement_as on debit' do
+          ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
+            and_return('Neighbor.ly')
+
+          customer.should_receive(:debit).
+                   with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+                   and_return(debit)
+          subject.checkout!
+        end
+      end
+
       it 'defines id as payment id of the contribution' do
         debit.stub(:id).and_return('i-am-an-id!')
         contribution.should_receive(:update_attributes).
