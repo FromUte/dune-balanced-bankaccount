@@ -3,6 +3,8 @@ en:
     balanced:
       bankaccount:
         payments:
+          debit:
+            description: 'Contribution to %{project_name}'
           new:
             bankaccount:
               title: 'Checkout using a Bank Account'
