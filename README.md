@@ -2,10 +2,6 @@
 
 [![Build Status](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount.png?branch=jl-setup-test-env)](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount) [![Code Climate](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount.png)](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount)
 
-## UNDER ACTIVE DEVELOPMENT
-
-This won't work for now. Feel free to follow the project and contribute, but it's not ready for production.
-
 ## What
 
 This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighborly](https://github.com/luminopolis/neighborly), a crowdfunding platform.
@@ -60,4 +56,6 @@ We prize for our test suite and coverage, so it would be great if you could run 
 
 `bundle exec rspec`
 
-**to be continued**
+## License
+
+Licensed under the [MIT license](LICENSE.txt).
