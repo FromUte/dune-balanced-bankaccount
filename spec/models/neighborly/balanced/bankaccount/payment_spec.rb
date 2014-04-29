@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Payment do
   let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
-  let(:contribution) { double('Contribution', value: 1234).as_null_object }
+  let(:contribution) { Contribution.new }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
   let(:attributes)   { { use_bank: bank_account.uri } }
@@ -23,6 +23,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
     contribution.stub_chain(:project, :user, :balanced_contributor).and_return(
       double('BalancedContributor', uri: 'project-owner-uri'))
 
+    contribution.stub(:value).and_return(1234)
     described_class.any_instance.stub(:meta).and_return({})
   end
 
