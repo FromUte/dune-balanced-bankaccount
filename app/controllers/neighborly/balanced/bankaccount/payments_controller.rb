@@ -4,14 +4,14 @@ module Neighborly::Balanced::Bankaccount
       attach_bank_to_customer
       update_customer
 
-      @payment = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
+      payment = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
         customer,
         resource,
         resource_params
       )
-      @payment.complete
+      payment.complete
 
-      redirect_to(*checkout_response_params)
+      redirect_to(*checkout_response_params(payment.status))
     end
 
     def update_customer
@@ -27,7 +27,7 @@ module Neighborly::Balanced::Bankaccount
       resource.class.model_name.singular.to_sym
     end
 
-    def checkout_response_params
+    def checkout_response_params(status)
       {
         contribution: {
           succeeded: [
@@ -44,7 +44,7 @@ module Neighborly::Balanced::Bankaccount
             alert: t('.errors.default')
           ]
         }
-      }.fetch(resource_name).fetch(@payment.status)
+      }.fetch(resource_name).fetch(status)
     end
   end
 end
