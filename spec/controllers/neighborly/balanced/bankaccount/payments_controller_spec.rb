@@ -29,80 +29,92 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   end
 
   describe 'POST create' do
-    let(:payment) do
-      double('Payment', status: :succeeded).as_null_object
-    end
-    let(:params) do
-      {
-        'payment' => {
-          'contribution_id' => '42',
-          'use_bank'        => '/ABANK',
-          'user'            => {}
-        },
-      }
-    end
-
-    it 'should receive authenticate_user!' do
-      expect(controller).to receive(:authenticate_user!)
-      post :create, params
-    end
-
-    before do
-      Neighborly::Balanced::Bankaccount::PaymentGenerator.
-        any_instance.
-        stub(:status).
-        and_return(:succeeded)
-    end
-
-    it 'generates new payment with given params' do
-      Neighborly::Balanced::Bankaccount::PaymentGenerator.should_receive(:new).
-        with(customer, an_instance_of(Contribution), params['payment']).
-        and_return(payment)
-      post :create, params
-    end
-
-    it 'completes a payment of the contribution' do
-      Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.should_receive(:complete)
-      post :create, params
-    end
-
-    context 'with successul checkout' do
-      it 'redirects to contribute page' do
-        post :create, params
-        expect(response).to redirect_to('/projects/forty-two/contributions/42')
+    shared_examples_for '#create' do
+      let(:payment) do
+        double('Payment', status: :succeeded).as_null_object
       end
-    end
+      let(:params) do
+        {
+          'payment' => {
+            resource_id_name  => '42',
+            'use_bank'        => '/ABANK',
+            'user'            => {}
+          },
+        }
+      end
 
-    context 'with unsuccessul checkout' do
+      it 'should receive authenticate_user!' do
+        expect(controller).to receive(:authenticate_user!)
+        post :create, params
+      end
+
       before do
         Neighborly::Balanced::Bankaccount::PaymentGenerator.
           any_instance.
           stub(:status).
-          and_return(:failed)
+          and_return(:succeeded)
       end
 
-      it 'redirects to contribution edit page' do
+      it 'generates new payment with given params' do
+        Neighborly::Balanced::Bankaccount::PaymentGenerator.should_receive(:new).
+          with(customer, an_instance_of(resource_class), params['payment']).
+          and_return(payment)
         post :create, params
-        expect(response).to redirect_to('/projects/forty-two/contributions/42/edit')
+      end
+
+      it 'completes a payment of the resource' do
+        Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.should_receive(:complete)
+        post :create, params
+      end
+
+      context 'with successul checkout' do
+        it 'redirects to contribute page' do
+          post :create, params
+          expect(response).to redirect_to(resource_path)
+        end
+      end
+
+      context 'with unsuccessul checkout' do
+        before do
+          Neighborly::Balanced::Bankaccount::PaymentGenerator.
+            any_instance.
+            stub(:status).
+            and_return(:failed)
+        end
+
+        it 'redirects to resource edit page' do
+          post :create, params
+          expect(response).to redirect_to(edit_resource_path)
+        end
+      end
+
+      describe 'insertion of bank account to a customer' do
+        it 'should use accounts controller attach_bank_to_customer method' do
+          expect_any_instance_of(
+            Neighborly::Balanced::Bankaccount::AccountsController
+          ).to receive(:attach_bank_to_customer)
+          post :create, params
+        end
+      end
+
+      describe 'update customer' do
+        it 'update user attributes and balanced customer' do
+          expect_any_instance_of(
+            Neighborly::Balanced::Customer
+          ).to receive(:update!)
+          post :create, params
+        end
       end
     end
 
-    describe 'insertion of bank account to a customer' do
-      it 'should use accounts controller attach_bank_to_customer method' do
-        expect_any_instance_of(
-          Neighborly::Balanced::Bankaccount::AccountsController
-        ).to receive(:attach_bank_to_customer)
-        post :create, params
-      end
+    context 'when resource is Contribution' do
+      let(:resource_class)     { Contribution }
+      let(:resource_id_name)   { 'contribution_id' }
+      let(:resource_path)      { '/projects/forty-two/contributions/42' }
+      let(:edit_resource_path) { '/projects/forty-two/contributions/42/edit' }
+
+      it_should_behave_like '#create'
     end
 
-    describe 'update customer' do
-      it 'update user attributes and balanced customer' do
-        expect_any_instance_of(
-          Neighborly::Balanced::Customer
-        ).to receive(:update!)
-        post :create, params
-      end
-    end
   end
 end
