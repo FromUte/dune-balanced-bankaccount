@@ -14,9 +14,9 @@ module Neighborly::Balanced::Bankaccount
     ensure
       resource.update_attributes(
         payment_id:                       @debit.try(:id),
-        payment_method:                   @engine_name,
+        payment_method:                   engine_name,
         payment_service_fee:              fee_calculator.fees,
-        payment_service_fee_paid_by_user: @attrs[:pay_fee]
+        payment_service_fee_paid_by_user: attrs[:pay_fee]
       )
     end
 
@@ -25,7 +25,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def debit_resource_uri
-      @attrs.fetch(:use_bank) { contributor.bank_account_uri }
+      attrs.fetch(:use_bank) { contributor.bank_account_uri }
     end
 
     def contributor

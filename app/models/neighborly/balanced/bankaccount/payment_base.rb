@@ -1,6 +1,6 @@
 module Neighborly::Balanced::Bankaccount
   class PaymentBase
-    attr_reader :resource
+    attr_reader :engine_name, :resource, :attrs
 
     def initialize(engine_name, customer, resource, attrs = {})
       @engine_name  = engine_name
@@ -16,7 +16,7 @@ module Neighborly::Balanced::Bankaccount
     def fee_calculator
       @fee_calculator and return @fee_calculator
 
-      calculator_class = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? @attrs[:pay_fee]
+      calculator_class = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include? attrs[:pay_fee]
                            TransactionAdditionalFeeCalculator
                          else
                            TransactionInclusiveFeeCalculator
