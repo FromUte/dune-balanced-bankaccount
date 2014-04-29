@@ -1,9 +1,11 @@
 module Neighborly::Balanced::Bankaccount
   class PaymentBase
-    def initialize(engine_name, customer, contribution, attrs = {})
+    attr_reader :resource
+
+    def initialize(engine_name, customer, resource, attrs = {})
       @engine_name  = engine_name
       @customer     = customer
-      @contribution = contribution
+      @resource     = resource
       @attrs        = attrs
     end
 
@@ -20,7 +22,7 @@ module Neighborly::Balanced::Bankaccount
                            TransactionInclusiveFeeCalculator
                          end
 
-      @fee_calculator = calculator_class.new(@contribution.value)
+      @fee_calculator = calculator_class.new(resource.value)
     end
 
     def debit

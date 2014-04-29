@@ -7,12 +7,12 @@ module Neighborly::Balanced::Bankaccount
                                description: debit_description,
                                on_behalf_of_uri: project_owner_customer.uri,
                                meta: meta)
-      @contribution.confirm!
+      resource.confirm!
     rescue Balanced::BadRequest
       @status = :failed
-      @contribution.cancel!
+      resource.cancel!
     ensure
-      @contribution.update_attributes(
+      resource.update_attributes(
         payment_id:                       @debit.try(:id),
         payment_method:                   @engine_name,
         payment_service_fee:              fee_calculator.fees,
@@ -35,12 +35,12 @@ module Neighborly::Balanced::Bankaccount
     private
     def debit_description
       I18n.t('neighborly.balanced.bankaccount.payments.debit.description',
-             project_name: @contribution.try(:project).try(:name))
+             project_name: resource.try(:project).try(:name))
     end
 
     def project_owner_customer
       @project_owner_customer ||= Neighborly::Balanced::Customer.new(
-        @contribution.project.user, {}).fetch
+        resource.project.user, {}).fetch
     end
 
     def meta
@@ -48,25 +48,25 @@ module Neighborly::Balanced::Bankaccount
         payment_service_fee: fee_calculator.fees,
         payment_service_fee_paid_by_user: @attrs[:pay_fee],
         project: {
-          id:        @contribution.project.id,
-          name:      @contribution.project.name,
-          permalink: @contribution.project.permalink,
-          user:      @contribution.project.user.id
+          id:        resource.project.id,
+          name:      resource.project.name,
+          permalink: resource.project.permalink,
+          user:      resource.project.user.id
         },
         user: {
-          id:        @contribution.user.id,
-          name:      @contribution.user.display_name,
-          email:     @contribution.user.email,
-          address:   { line1:        @contribution.user.address_street,
-                       city:         @contribution.user.address_city,
-                       state:        @contribution.user.address_state,
-                       postal_code:  @contribution.user.address_zip_code
+          id:        resource.user.id,
+          name:      resource.user.display_name,
+          email:     resource.user.email,
+          address:   { line1:        resource.user.address_street,
+                       city:         resource.user.address_city,
+                       state:        resource.user.address_state,
+                       postal_code:  resource.user.address_zip_code
           }
         },
         reward: {
-          id:          @contribution.reward.try(:id),
-          title:       @contribution.reward.try(:title),
-          description: @contribution.reward.try(:description)
+          id:          resource.reward.try(:id),
+          title:       resource.reward.try(:title),
+          description: resource.reward.try(:description)
         }
       }
     end

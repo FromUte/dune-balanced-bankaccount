@@ -1,12 +1,12 @@
 module Neighborly::Balanced::Bankaccount
   class PaymentGenerator
-    attr_reader :attrs, :contribution, :customer
+    attr_reader :attrs, :resource, :customer
 
     delegate :status, to: :payment
 
-    def initialize(customer, contribution, attrs = {})
+    def initialize(customer, resource, attrs = {})
       @customer      = customer
-      @contribution  = contribution
+      @resource      = resource
       @attrs         = attrs
     end
 
@@ -18,7 +18,7 @@ module Neighborly::Balanced::Bankaccount
       @payment ||= payment_class.new(
         'balanced-bankaccount',
         customer,
-        contribution,
+        resource,
         attrs
       )
     end
