@@ -33,7 +33,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       it 'returns gross amount from TransactionAdditionalFeeCalculator' do
         Neighborly::Balanced::Bankaccount::TransactionAdditionalFeeCalculator.
           any_instance.stub(:gross_amount).and_return(15)
-        expect(subject.contribution_amount_in_cents).to eql(1500)
+        expect(subject.amount_in_cents).to eql(1500)
       end
     end
 
@@ -43,7 +43,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       it 'returns gross amount from TransactionInclusiveFeeCalculator' do
         Neighborly::Balanced::Bankaccount::TransactionInclusiveFeeCalculator.
           any_instance.stub(:gross_amount).and_return(10)
-        expect(subject.contribution_amount_in_cents).to eql(1000)
+        expect(subject.amount_in_cents).to eql(1000)
       end
     end
   end

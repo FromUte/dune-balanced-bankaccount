@@ -7,7 +7,7 @@ module Neighborly::Balanced::Bankaccount
       @attrs        = attrs
     end
 
-    def contribution_amount_in_cents
+    def amount_in_cents
       (fee_calculator.gross_amount * 100).round
     end
 
