@@ -116,5 +116,13 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
       it_should_behave_like '#create'
     end
 
+    context 'when resource is Projects::Match' do
+      let(:resource_class)     { Projects::Match }
+      let(:resource_id_name)   { 'projects_match_id' }
+      let(:resource_path)      { '/projects/forty-two/matches/42' }
+      let(:edit_resource_path) { '/projects/forty-two/matches/42/edit' }
+
+      it_should_behave_like '#create'
+    end
   end
 end

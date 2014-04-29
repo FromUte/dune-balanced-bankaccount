@@ -20,7 +20,11 @@ module Neighborly::Balanced::Bankaccount
 
     protected
     def resource
-      @resource ||= Contribution.find(params[:payment].fetch(:contribution_id))
+      @resource ||= if params[:payment][:projects_match_id].present?
+                      Projects::Match.find(params[:payment].fetch(:projects_match_id))
+                    else
+                      Contribution.find(params[:payment].fetch(:contribution_id))
+                    end
     end
 
     def resource_name
@@ -28,19 +32,24 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def checkout_response_params(status)
+      route_params = [resource.project.permalink, resource.id]
+
       {
         contribution: {
           succeeded: [
-            main_app.project_contribution_path(
-              resource.project.permalink,
-              resource.id
-            )
+            main_app.project_contribution_path(*route_params)
           ],
           failed: [
-            main_app.edit_project_contribution_path(
-              resource.project.permalink,
-              resource.id
-            ),
+            main_app.edit_project_contribution_path(*route_params),
+            alert: t('.errors.default')
+          ]
+        },
+        projects_match: {
+          succeeded: [
+            main_app.project_match_path(*route_params)
+          ],
+          failed: [
+            main_app.edit_project_match_path(*route_params),
             alert: t('.errors.default')
           ]
         }
