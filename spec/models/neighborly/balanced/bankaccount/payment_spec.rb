@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Payment do
   let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
-  let(:contribution) { Contribution.new }
+  let(:resource)     { Contribution.new }
   let(:debit)        { double('::Balanced::Debit').as_null_object }
   let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
   let(:attributes)   { { use_bank: bank_account.uri } }
@@ -12,7 +12,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
   subject do
     described_class.new('balanced-bankaccount',
                         customer,
-                        contribution,
+                        resource,
                         attributes)
   end
   before do
@@ -20,14 +20,14 @@ describe Neighborly::Balanced::Bankaccount::Payment do
     customer.stub(:debit).and_return(debit)
 
     ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
-    contribution.stub_chain(:project, :user, :balanced_contributor).and_return(
+    resource.stub_chain(:project, :user, :balanced_contributor).and_return(
       double('BalancedContributor', uri: 'project-owner-uri'))
 
-    contribution.stub(:value).and_return(1234)
+    resource.stub(:value).and_return(1234)
     described_class.any_instance.stub(:meta).and_return({})
   end
 
-  describe 'contribution amount in cents' do
+  describe '#amount_in_cents' do
     context 'when customer is paying fees' do
       let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
 
@@ -50,7 +50,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
   end
 
   describe 'checkout' do
-    shared_examples 'updates contribution object' do
+    shared_examples 'updates resource object' do
       let(:attributes)  { { pay_fee: '1', use_bank: bank_account.uri } }
 
       context 'when a source_uri is provided' do
@@ -77,16 +77,16 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         end
       end
 
-      it 'defines given engine\'s name as payment method of the contribution' do
-        contribution.should_receive(:update_attributes).
+      it 'defines given engine\'s name as payment method of the resource' do
+        resource.should_receive(:update_attributes).
                      with(hash_including(payment_method: 'balanced-bankaccount'))
         subject.checkout!
       end
 
-      it 'saves paid fees on contribution object' do
+      it 'saves paid fees on resource object' do
         calculator = double('FeeCalculator', fees: 0.42).as_null_object
         subject.stub(:fee_calculator).and_return(calculator)
-        contribution.should_receive(:update_attributes).
+        resource.should_receive(:update_attributes).
                      with(hash_including(payment_service_fee: 0.42))
         subject.checkout!
       end
@@ -94,7 +94,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       it 'saves who paid the fees' do
         calculator = double('FeeCalculator', fees: 0.42).as_null_object
         subject.stub(:fee_calculator).and_return(calculator)
-        contribution.should_receive(:update_attributes).
+        resource.should_receive(:update_attributes).
                      with(hash_including(payment_service_fee_paid_by_user: '1'))
         subject.checkout!
       end
@@ -103,10 +103,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
     context 'with successful debit' do
       before { customer.stub(:debit).and_return(debit) }
 
-      include_examples 'updates contribution object'
+      include_examples 'updates resource object'
 
-      it 'confirms the contribution' do
-        expect(contribution).to receive(:confirm!)
+      it 'confirms the resource' do
+        expect(resource).to receive(:confirm!)
         subject.checkout!
       end
 
@@ -120,9 +120,9 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         subject.checkout!
       end
 
-      it 'defines id as payment id of the contribution' do
+      it 'defines id as payment id of the resource' do
         debit.stub(:id).and_return('i-am-an-id!')
-        contribution.should_receive(:update_attributes).
+        resource.should_receive(:update_attributes).
                      with(hash_including(payment_id: 'i-am-an-id!'))
         subject.checkout!
       end
@@ -148,17 +148,17 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         customer.stub(:debit).and_raise(Balanced::BadRequest.new({}))
       end
 
-      include_examples 'updates contribution object'
+      include_examples 'updates resource object'
 
-      it 'cancels the contribution' do
-        expect(contribution).to receive(:cancel!)
+      it 'cancels the resource' do
+        expect(resource).to receive(:cancel!)
         subject.checkout!
       end
     end
 
     context 'when a description is provided to debit' do
       it 'defines description on debit' do
-        contribution.stub_chain(:project, :name).and_return('Awesome Project')
+        resource.stub_chain(:project, :name).and_return('Awesome Project')
         customer.should_receive(:debit).
                  with(hash_including(description: 'Contribution to Awesome Project')).
                  and_return(debit)
