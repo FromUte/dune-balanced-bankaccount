@@ -33,9 +33,15 @@ module Neighborly::Balanced::Bankaccount
     end
 
     private
+    def resource_name
+      resource.class.model_name.singular
+    end
+
     def debit_description
-      I18n.t('neighborly.balanced.bankaccount.payments.debit.description',
-             project_name: resource.try(:project).try(:name))
+
+      I18n.t('description',
+             project_name: resource.try(:project).try(:name),
+             scope: "neighborly.balanced.bankaccount.payments.debit.#{resource_name}")
     end
 
     def project_owner_customer
@@ -44,31 +50,37 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def meta
-      {
-        payment_service_fee: fee_calculator.fees,
-        payment_service_fee_paid_by_user: @attrs[:pay_fee],
-        project: {
-          id:        resource.project.id,
-          name:      resource.project.name,
-          permalink: resource.project.permalink,
-          user:      resource.project.user.id
-        },
-        user: {
-          id:        resource.user.id,
-          name:      resource.user.display_name,
-          email:     resource.user.email,
-          address:   { line1:        resource.user.address_street,
-                       city:         resource.user.address_city,
-                       state:        resource.user.address_state,
-                       postal_code:  resource.user.address_zip_code
-          }
-        },
-        reward: {
-          id:          resource.reward.try(:id),
-          title:       resource.reward.try(:title),
-          description: resource.reward.try(:description)
-        }
-      }
+      meta = {
+              payment_service_fee: fee_calculator.fees,
+              payment_service_fee_paid_by_user: attrs[:pay_fee],
+              project: {
+                id:        resource.project.id,
+                name:      resource.project.name,
+                permalink: resource.project.permalink,
+                user:      resource.project.user.id
+              },
+              user: {
+                id:        resource.user.id,
+                name:      resource.user.display_name,
+                email:     resource.user.email,
+                address:   { line1:        resource.user.address_street,
+                             city:         resource.user.address_city,
+                             state:        resource.user.address_state,
+                             postal_code:  resource.user.address_zip_code
+                }
+              }
+            }
+      if resource_name == 'contribution'
+        meta.merge!({
+          reward: {
+                id:          resource.reward.try(:id),
+                title:       resource.reward.try(:title),
+                description: resource.reward.try(:description)
+              }
+          })
+      end
+
+      meta
     end
   end
 end

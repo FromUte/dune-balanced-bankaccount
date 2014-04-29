@@ -4,7 +4,8 @@ en:
       bankaccount:
         payments:
           debit:
-            description: 'Contribution to %{project_name}'
+            contribution:
+              description: 'Contribution to %{project_name}'
           new:
             bankaccount:
               title: 'Checkout using a Bank Account'
