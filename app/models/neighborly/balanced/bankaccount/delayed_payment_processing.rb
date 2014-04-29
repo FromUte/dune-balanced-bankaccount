@@ -1,15 +1,15 @@
 module Neighborly::Balanced::Bankaccount
   class DelayedPaymentProcessing
-    def initialize(contributor, contributions)
-      @contributor, @contributions = contributor, contributions
+    def initialize(contributor, resources)
+      @contributor, @resources = contributor, resources
     end
 
     def complete
-      @contributions.each do |contribution|
+      @resources.each do |resource|
         Neighborly::Balanced::Bankaccount::Payment.new(
           'balanced-bankaccount',
           customer,
-          contribution,
+          resource,
           {}
         ).checkout!
       end
