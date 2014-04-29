@@ -70,7 +70,7 @@ module Neighborly::Balanced::Bankaccount
                 }
               }
             }
-      if resource_name == 'contribution'
+      if resource.respond_to? :reward
         meta.merge!({
           reward: {
                 id:          resource.reward.try(:id),
