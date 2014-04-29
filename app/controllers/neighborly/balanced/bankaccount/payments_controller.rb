@@ -4,15 +4,14 @@ module Neighborly::Balanced::Bankaccount
       attach_bank_to_customer
       update_customer
 
-      @contribution = Contribution.find(params[:payment].fetch(:contribution_id))
-      @payment      = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
+      payment = Neighborly::Balanced::Bankaccount::PaymentGenerator.new(
         customer,
-        @contribution,
+        resource,
         resource_params
       )
-      @payment.complete
+      payment.complete
 
-      redirect_to(*checkout_response_params)
+      redirect_to(*checkout_response_params(payment.status))
     end
 
     def update_customer
@@ -20,23 +19,32 @@ module Neighborly::Balanced::Bankaccount
     end
 
     protected
+    def resource
+      @resource ||= Contribution.find(params[:payment].fetch(:contribution_id))
+    end
 
-    def checkout_response_params
+    def resource_name
+      resource.class.model_name.singular.to_sym
+    end
+
+    def checkout_response_params(status)
       {
-        succeeded: [
-          main_app.project_contribution_path(
-            @contribution.project.permalink,
-            @contribution.id
-          )
-        ],
-        failed: [
-          main_app.edit_project_contribution_path(
-            @contribution.project.permalink,
-            @contribution.id
-          ),
-          alert: t('.errors.default')
-        ]
-      }.fetch(@payment.status)
+        contribution: {
+          succeeded: [
+            main_app.project_contribution_path(
+              resource.project.permalink,
+              resource.id
+            )
+          ],
+          failed: [
+            main_app.edit_project_contribution_path(
+              resource.project.permalink,
+              resource.id
+            ),
+            alert: t('.errors.default')
+          ]
+        }
+      }.fetch(resource_name).fetch(status)
     end
   end
 end
