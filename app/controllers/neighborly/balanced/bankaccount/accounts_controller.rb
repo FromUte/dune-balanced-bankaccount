@@ -54,7 +54,7 @@ module Neighborly::Balanced::Bankaccount
     def resource_params
       params.require(:payment).
              permit(:contribution_id,
-                    :projects_match_id,
+                    :match_id,
                     :use_bank,
                     :pay_fee,
                     user: {})

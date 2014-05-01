@@ -2,8 +2,8 @@
 
 .neighborly-balanced-bankaccount-form[data-balanced-bankaccount-form data-balanced-marketplace-id=@balanced_marketplace_id data-routing-number-path=routing_number_url(:id, protocol: request.protocol)]
   = simple_form_for :payment, url: payments_path do |f|
-    - if params[:projects_match_id].present?
-      = f.input :projects_match_id, as: :hidden, input_html: { value: params[:projects_match_id] }
+    - if params[:match_id].present?
+      = f.input :match_id, as: :hidden, input_html: { value: params[:match_id] }
     - else
       = f.input :contribution_id, as: :hidden, input_html: { value: params[:contribution_id] }
     = f.input :pay_fee, as: :hidden, input_html: { value: 1, 'data-pay-payment-fee' => '' }
