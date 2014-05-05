@@ -9,14 +9,18 @@ module Neighborly::Balanced::Bankaccount
       contributor = Neighborly::Balanced::Contributor.find(contributor_id)
       DelayedPaymentProcessing.new(
         contributor,
-        waiting_confirmation_contributions(contributor)
+        resources_waiting_confirmation_for(contributor.user)
       ).complete
     end
 
-    def waiting_confirmation_contributions(contributor)
-      contributor.user.contributions.
-        with_state(:waiting_confirmation).
+    def resources_waiting_confirmation_for(user)
+      resources = user.contributions.with_state(:waiting_confirmation).
+        where(payment_method: 'balanced-bankaccount') || []
+
+      resources.concat user.matches.with_state(:waiting_confirmation).
         where(payment_method: 'balanced-bankaccount')
+
+      resources
     end
   end
 end
