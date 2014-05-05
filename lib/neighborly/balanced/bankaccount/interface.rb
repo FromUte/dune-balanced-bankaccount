@@ -5,9 +5,10 @@ module Neighborly::Balanced::Bankaccount
       'balanced-bankaccount'
     end
 
-    def payment_path(contribution)
+    def payment_path(resource)
+      key = "#{ActiveModel::Naming.param_key(resource)}_id"
       Neighborly::Balanced::Bankaccount::Engine.
-        routes.url_helpers.new_payment_path(contribution_id: contribution)
+        routes.url_helpers.new_payment_path(key => resource)
     end
 
     def account_path
