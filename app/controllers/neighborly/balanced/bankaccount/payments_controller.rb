@@ -39,6 +39,9 @@ module Neighborly::Balanced::Bankaccount
           succeeded: [
             main_app.project_contribution_path(*route_params)
           ],
+          pending: [
+            main_app.project_contribution_path(*route_params)
+          ],
           failed: [
             main_app.edit_project_contribution_path(*route_params),
             alert: t('.errors.default')
@@ -46,6 +49,9 @@ module Neighborly::Balanced::Bankaccount
         },
         match: {
           succeeded: [
+            main_app.project_match_path(*route_params)
+          ],
+          pending: [
             main_app.project_match_path(*route_params)
           ],
           failed: [

@@ -74,6 +74,20 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
         end
       end
 
+      context 'with pending checkout status' do
+        before do
+          Neighborly::Balanced::Bankaccount::PaymentGenerator.
+            any_instance.
+            stub(:status).
+            and_return(:pending)
+        end
+
+        it 'redirects to contribute page' do
+          post :create, params
+          expect(response).to redirect_to(resource_path)
+        end
+      end
+
       context 'with unsuccessul checkout' do
         before do
           Neighborly::Balanced::Bankaccount::PaymentGenerator.
