@@ -18,6 +18,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
     before do
       subject.stub(:debit_resource).and_return(bank_account)
       customer.stub(:debit).and_return(debit)
+      subject.stub_chain(:contributor, :projects).and_return([])
 
       ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
       resource.stub_chain(:project, :user, :balanced_contributor).and_return(
@@ -64,7 +65,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
         context 'when no source_uri is provided' do
           let(:contributor) do
-            double('Neighborly::Balanced::Contributor', bank_account_uri: '/MY-DEFAULT-BANK')
+            double('Neighborly::Balanced::Contributor',
+              bank_account_uri: '/MY-DEFAULT-BANK',
+              projects:         []
+            )
           end
           let(:attributes) { { pay_fee: '1' } }
           before { subject.stub(:contributor).and_return(contributor) }
@@ -127,19 +131,40 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           subject.checkout!
         end
 
-        it 'defines on_behalf_of_uri on debit' do
-          customer.should_receive(:debit).
-                   with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
-                   and_return(debit)
-          subject.checkout!
-        end
-
         it 'defines meta on debit' do
           described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
           customer.should_receive(:debit).
                    with(hash_including(meta: { payment_service_fee: 5.0 })).
                    and_return(debit)
           subject.checkout!
+        end
+
+        context 'when person not related to project is contributing' do
+          it 'defines on_behalf_of_uri on debit' do
+            customer.should_receive(:debit).
+                     with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
+                     and_return(debit)
+            subject.checkout!
+          end
+        end
+
+        context 'when project owner is the contributor' do
+          before do
+            subject.stub_chain(:contributor, :projects).
+              and_return([resource.project])
+          end
+
+          it 'completes the debit' do
+            expect(customer).to receive(:debit)
+            subject.checkout!
+          end
+
+          it 'defines on_behalf_of_uri on debit' do
+            expect(customer).to_not receive(:debit).
+                     with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
+                     and_return(debit)
+            subject.checkout!
+          end
         end
       end
 

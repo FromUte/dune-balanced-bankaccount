@@ -1,12 +1,20 @@
 module Neighborly::Balanced::Bankaccount
   class Payment < PaymentBase
     def checkout!
-      @debit = @customer.debit(amount:     amount_in_cents,
-                               source_uri: debit_resource_uri,
-                               appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
-                               description: debit_description,
-                               on_behalf_of_uri: project_owner_customer.uri,
-                               meta: meta)
+      debit_params = {
+        amount:                  amount_in_cents,
+        appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
+        description:             debit_description,
+        meta:                    meta,
+        on_behalf_of_uri:        project_owner_customer.uri,
+        source_uri:              debit_resource_uri,
+      }
+
+      unless contributor.projects.include? resource.project
+        debit_params[:on_behalf_of_uri] = project_owner_customer.uri
+      end
+
+      @debit = @customer.debit(debit_params)
       resource.confirm!
     rescue Balanced::BadRequest
       @status = :failed
