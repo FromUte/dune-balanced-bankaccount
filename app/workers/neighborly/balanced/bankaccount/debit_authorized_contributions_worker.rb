@@ -3,7 +3,7 @@ require 'sidekiq'
 module Neighborly::Balanced::Bankaccount
   class DebitAuthorizedContributionsWorker
     include Sidekiq::Worker
-    sidekiq_options retry: true
+    sidekiq_options retry: false
 
     def perform(contributor_id)
       contributor = Neighborly::Balanced::Contributor.find(contributor_id)
