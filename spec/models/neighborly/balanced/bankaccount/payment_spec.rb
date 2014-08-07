@@ -160,9 +160,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           end
 
           it 'defines on_behalf_of_uri on debit' do
-            expect(customer).to_not receive(:debit).
-                     with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
-                     and_return(debit)
+            expect(customer).to receive(:debit) do |params|
+              expect(params[:on_behalf_of_uri]).to be_blank
+            end
+
             subject.checkout!
           end
         end

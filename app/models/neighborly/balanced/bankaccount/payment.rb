@@ -6,7 +6,6 @@ module Neighborly::Balanced::Bankaccount
         appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
         description:             debit_description,
         meta:                    meta,
-        on_behalf_of_uri:        project_owner_customer.uri,
         source_uri:              debit_resource_uri,
       }
 
