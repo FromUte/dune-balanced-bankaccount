@@ -3,8 +3,7 @@ module Neighborly::Balanced::Bankaccount
     before_filter :authenticate_user!
 
     def new
-      @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @bank_account            = customer.bank_accounts.to_a.try(:last)
+      @bank_account = customer.bank_accounts.to_a.last
       render layout: false
     end
 
