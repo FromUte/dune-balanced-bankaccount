@@ -138,35 +138,6 @@ describe Neighborly::Balanced::Bankaccount::Payment do
                    and_return(debit)
           subject.checkout!
         end
-
-        context 'when person not related to project is contributing' do
-          it 'defines on_behalf_of_uri on debit' do
-            customer.should_receive(:debit).
-                     with(hash_including(on_behalf_of_uri: 'project-owner-uri')).
-                     and_return(debit)
-            subject.checkout!
-          end
-        end
-
-        context 'when project owner is the contributor' do
-          before do
-            subject.stub_chain(:contributor, :projects).
-              and_return([resource.project])
-          end
-
-          it 'completes the debit' do
-            expect(customer).to receive(:debit)
-            subject.checkout!
-          end
-
-          it 'defines on_behalf_of_uri on debit' do
-            expect(customer).to receive(:debit) do |params|
-              expect(params[:on_behalf_of_uri]).to be_blank
-            end
-
-            subject.checkout!
-          end
-        end
       end
 
       context 'when raising Balanced::BadRequest exception' do

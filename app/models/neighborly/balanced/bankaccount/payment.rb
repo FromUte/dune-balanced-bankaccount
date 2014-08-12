@@ -9,10 +9,6 @@ module Neighborly::Balanced::Bankaccount
         source_uri:              debit_resource_uri,
       }
 
-      unless contributor.projects.include? resource.project
-        debit_params[:on_behalf_of_uri] = project_owner_customer.uri
-      end
-
       @debit = @customer.debit(debit_params)
       resource.confirm!
     rescue Balanced::BadRequest
