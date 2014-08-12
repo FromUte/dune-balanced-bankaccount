@@ -4,17 +4,23 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
   routes { Neighborly::Balanced::Bankaccount::Engine.routes }
 
   let(:current_user) { double('User', id: 42).as_null_object }
+
+  let(:bank_account) do
+    double('::Balanced::BankAccount', href: '/ABANK').as_null_object
+  end
+
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK')],
-           uri:           '/qwertyuiop').as_null_object
+           bank_accounts: [bank_account],
+           href:           '/qwertyuiop').as_null_object
   end
+
 
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
+    ::Balanced::BankAccount.stub(:fetch).and_return(bank_account)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
-    ::Balanced::BankAccount.stub_chain(:find, :verify)
     Notification.stub(:notify)
     controller.stub(:authenticate_user!)
     controller.stub(:current_user).and_return(current_user)
@@ -85,7 +91,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
       let(:customer) { double('::Balanced::Customer').as_null_object }
       let(:bank) do
-        double('::Balanced::BankAccount', uri: params['payment']['use_bank'])
+        double('::Balanced::BankAccount', href: params['payment']['use_bank']).as_null_object
       end
 
       before do
@@ -100,7 +106,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
 
         it "inserts to customer's bank accounts list" do
-          expect(customer).to receive(:add_bank_account).with(bank.uri)
+          expect(bank_account).to receive(:associate_to_customer).with(customer)
           post :create, params
         end
 
@@ -132,14 +138,14 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
 
         it 'skips insertion' do
-          expect(customer).to_not receive(:add_bank_account)
+          expect(bank_account).to_not receive(:associate_to_customer)
           post :create, params
         end
       end
 
       context 'customer has other bank account' do
         let(:bank) do
-          double('::Balanced::BankAccount', uri: '/OLD_BANK').as_null_object
+          double('::Balanced::BankAccount', href: '/OLD_BANK').as_null_object
         end
 
         before do
@@ -147,7 +153,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
 
         it 'unstores the other bank' do
-          expect(customer).to receive(:add_bank_account)
+          expect(bank_account).to receive(:associate_to_customer)
           expect(bank).to receive(:unstore)
           post :create, params
         end
@@ -172,7 +178,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
         end
 
         it 'should start the bank account verification' do
-          expect(::Balanced::BankAccount.find).to receive(:verify)
+          expect(bank_account).to receive(:verify)
           post :create, params
         end
       end

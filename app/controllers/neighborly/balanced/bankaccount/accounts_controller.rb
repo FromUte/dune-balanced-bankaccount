@@ -4,7 +4,7 @@ module Neighborly::Balanced::Bankaccount
 
     def new
       @balanced_marketplace_id = ::Configuration.fetch(:balanced_marketplace_id)
-      @bank_account            = customer.bank_accounts.try(:last)
+      @bank_account            = customer.bank_accounts.to_a.try(:last)
       render layout: false
     end
 
@@ -18,17 +18,17 @@ module Neighborly::Balanced::Bankaccount
     private
 
     def attach_bank_to_customer
-      new_bank_account_uri = resource_params.fetch(:use_bank)
-      unless customer_bank_accounts.any? { |c| c.uri.eql? new_bank_account_uri }
+      bank_account = Balanced::BankAccount.fetch(resource_params.fetch(:use_bank))
+      unless customer_bank_accounts.any? { |c| c.href.eql? bank_account.href }
         Neighborly::Balanced::Contributor.
           find_or_create_by(user_id: current_user.id).
-          update_attributes(bank_account_uri: new_bank_account_uri)
+          update_attributes(bank_account_uri: bank_account.href)
         notify_user_about_replacement
         unstore_all_bank_accounts
         # Not calling #reload raises Balanced::ConflictError when attaching a
         # new card after unstoring others.
-        customer.reload.add_bank_account(new_bank_account_uri)
-        verify_bank_account(new_bank_account_uri)
+        bank_account.associate_to_customer(customer)
+        verify_bank_account(bank_account)
       end
     end
 
@@ -38,7 +38,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def verify_bank_account(bank_account)
-      Balanced::BankAccount.find(bank_account).verify
+      bank_account.verify
     end
 
     def unstore_all_bank_accounts
@@ -48,7 +48,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def customer_bank_accounts
-      @bank_accounts ||= customer.bank_accounts
+      @bank_accounts ||= customer.bank_accounts.to_a
     end
 
     def resource_params
