@@ -6,7 +6,7 @@ module Neighborly::Balanced::Bankaccount
         appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
         description:             debit_description,
         meta:                    meta,
-        source_uri:              debit_resource_uri,
+        source_uri:              debit_resource_href,
       }
 
       @debit = @customer.debit(debit_params)
@@ -28,12 +28,12 @@ module Neighborly::Balanced::Bankaccount
       %i(pending succeeded).include? status
     end
 
-    def debit_resource_uri
-      attrs.fetch(:use_bank) { contributor.bank_account_uri }
+    def debit_resource_href
+      attrs.fetch(:use_bank) { contributor.bank_account_href }
     end
 
     def contributor
-      @contributor ||= Neighborly::Balanced::Contributor.find_by(uri: @customer.uri)
+      @contributor ||= Neighborly::Balanced::Contributor.find_by(href: @customer.href)
     end
 
     private

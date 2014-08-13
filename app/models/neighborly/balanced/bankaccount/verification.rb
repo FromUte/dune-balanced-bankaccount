@@ -2,8 +2,8 @@ module Neighborly::Balanced::Bankaccount
   class Verification
     delegate :user, to: :contributor
 
-    def self.find(uri)
-      new(::Balanced::Verification.find(uri))
+    def self.find(href)
+      new(::Balanced::Verification.find(href))
     end
 
     def initialize(balanced_verification)
@@ -11,17 +11,17 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def bank_account
-      ::Balanced::BankAccount.find(bank_account_uri)
+      ::Balanced::BankAccount.find(bank_account_href)
     end
 
-    def bank_account_uri
-      account_uri = uri.match(/\A(?<bank_account_uri>\/.+\/bank_accounts\/.+)\/verifications/)[:bank_account_uri]
-      account_uri['/bank_accounts'] = "/marketplaces/#{Configuration[:balanced_marketplace_id]}/bank_accounts"
-      account_uri
+    def bank_account_href
+      account_href = href.match(/\A(?<bank_account_href>\/.+\/bank_accounts\/.+)\/verifications/)[:bank_account_href]
+      account_href['/bank_accounts'] = "/marketplaces/#{Configuration[:balanced_marketplace_id]}/bank_accounts"
+      account_href
     end
 
     def contributor
-      Neighborly::Balanced::Contributor.find_by(bank_account_uri: bank_account_uri)
+      Neighborly::Balanced::Contributor.find_by(bank_account_href: bank_account_href)
     end
 
     def confirm

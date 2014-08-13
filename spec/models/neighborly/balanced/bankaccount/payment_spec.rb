@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Payment do
   shared_examples_for 'payable' do
-    let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
+    let(:customer)     { double('::Balanced::Customer', href: '/CUSTOMER-ID') }
     let(:debit)        { double('::Balanced::Debit').as_null_object }
     let(:bank_account) { double('::Balanced::BankAccount', href: '/ABANK') }
     let(:attributes)   { { use_bank: bank_account.href } }
@@ -19,7 +19,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
       ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
       resource.stub_chain(:project, :user, :balanced_contributor).and_return(
-        double('BalancedContributor', uri: 'project-owner-uri'))
+        double('BalancedContributor', href: 'project-owner-href'))
 
       resource.stub(:value).and_return(1234)
       described_class.any_instance.stub(:meta).and_return({})
@@ -27,7 +27,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
     describe '#amount_in_cents' do
       context 'when customer is paying fees' do
-        let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
+        let(:attributes) { { pay_fee: '1', use_bank: bank_account.href } }
 
         it 'returns gross amount from TransactionAdditionalFeeCalculator' do
           Neighborly::Balanced::Bankaccount::TransactionAdditionalFeeCalculator.
@@ -37,7 +37,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       end
 
       context 'when customer is not paying fees' do
-        let(:attributes) { { pay_fee: '0', use_bank: bank_account.uri } }
+        let(:attributes) { { pay_fee: '0', use_bank: bank_account.href } }
 
         it 'returns gross amount from TransactionInclusiveFeeCalculator' do
           Neighborly::Balanced::Bankaccount::TransactionInclusiveFeeCalculator.
@@ -49,12 +49,12 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
     describe 'checkout' do
       shared_examples 'updates resource object' do
-        let(:attributes)  { { pay_fee: '1', use_bank: bank_account.uri } }
+        let(:attributes)  { { pay_fee: '1', use_bank: bank_account.href } }
 
         context 'when a source_uri is provided' do
           it 'debits customer on selected funding instrument' do
             customer.should_receive(:debit).
-                     with(hash_including(source_uri: bank_account.uri)).
+                     with(hash_including(source_uri: bank_account.href)).
                      and_return(debit)
             subject.checkout!
           end
@@ -63,7 +63,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         context 'when no source_uri is provided' do
           let(:contributor) do
             double('Neighborly::Balanced::Contributor',
-              bank_account_uri: '/MY-DEFAULT-BANK',
+              bank_account_href: '/MY-DEFAULT-BANK',
               projects:         []
             )
           end
@@ -72,7 +72,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
           it 'debits customer on default funding instrument' do
             customer.should_receive(:debit).
-                     with(hash_including(source_uri: contributor.bank_account_uri)).
+                     with(hash_including(source_uri: contributor.bank_account_href)).
                      and_return(debit)
             subject.checkout!
           end

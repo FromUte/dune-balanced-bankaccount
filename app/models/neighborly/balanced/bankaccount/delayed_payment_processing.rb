@@ -16,7 +16,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def customer
-      @customer ||= ::Balanced::Customer.find(@contributor.uri)
+      @customer ||= ::Balanced::Customer.find(@contributor.href)
     end
   end
 end

@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140224220426) do
+ActiveRecord::Schema.define(version: 20140814011313) do
+
+  create_table "balanced_contributors", force: true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "href"
+    t.string   "bank_account_href"
+  end
+
+  add_index "balanced_contributors", ["user_id"], name: "index_balanced_contributors_on_user_id"
 
   create_table "routing_numbers", force: true do |t|
     t.string   "number",     null: false

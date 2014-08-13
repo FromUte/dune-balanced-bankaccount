@@ -9,10 +9,14 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
                                 attempts_remaining: 2) }
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK',
-                                  bank_account_verifications: [verification]
-                                 )],
-           uri:           '/qwertyuiop').as_null_object
+      bank_accounts: [
+        double('::Balanced::BankAccount',
+          href: '/ABANK',
+          bank_account_verifications: [verification]
+        )
+      ],
+      href: '/qwertyuiop'
+    ).as_null_object
   end
 
   before do

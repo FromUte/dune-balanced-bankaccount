@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::DelayedPaymentProcessing do
-  let(:contributor) { double('Contributor', uri: '/MYID') }
+  let(:contributor) { double('Contributor', href: '/MYID') }
   let(:customer)    { double('Customer') }
   subject { described_class.new(contributor, contributions) }
   before do

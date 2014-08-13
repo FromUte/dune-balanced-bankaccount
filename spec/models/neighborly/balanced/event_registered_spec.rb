@@ -4,8 +4,9 @@ describe Neighborly::Balanced::EventRegistered do
   let(:user) { double('User') }
   let(:event) do
     double('Neighborly::Balanced::Event',
-           entity_uri: '/verifications/MYEVENT',
-           user:       user)
+      entity_href: '/verifications/MYEVENT',
+      user:       user
+    )
   end
 
   describe 'confirmation' do
