@@ -9,9 +9,7 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
     _.bindAll(this, 'submit', 'submitToBalanced')
     this.Flash = Neighborly.Neighborly.Balanced.Bankaccount.Flash
 
-    $.getScript 'https://js.balancedpayments.com/v1/balanced.js', ->
-      balancedMarketplaceID = $('[data-balanced-bankaccount-form]').attr('data-balanced-marketplace-id')
-      balanced.init("/v1/marketplaces/#{balancedMarketplaceID}")
+    $.getScript 'https://js.balancedpayments.com/1.1/balanced.js'
 
     this.$form = this.$('form')
     this.$form.bind('submit', this.submit)
@@ -61,7 +59,7 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
     this.$('[data-balanced-bank-account-input]').val('')
 
     balanced_callback_for_201 = (response) ->
-      selectedBank.val(response.data.uri)
+      selectedBank.val(response.bank_accounts[0].href)
       $('[data-balanced-bankaccount-form] form').submit()
 
     that = this
@@ -72,7 +70,7 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
       $submit.val($submit.data('enable-with'))
 
     balanced.bankAccount.create bankAccountData, (response) ->
-      switch response.status
+      switch response.status_code
         when 201 then balanced_callback_for_201(response)
         when 402 then balanced_callback_for_402(response)
 

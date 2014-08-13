@@ -37,11 +37,6 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
       expect(response.status).to eq 200
     end
 
-    it 'should assign balanced_marketplace_id to view' do
-      get :new, contribution_id: 42
-      expect(assigns(:balanced_marketplace_id)).to_not be_nil
-    end
-
     it 'should assign bank_account to view' do
       get :new, contribution_id: 42
       expect(assigns(:bank_account)).to_not be_nil
