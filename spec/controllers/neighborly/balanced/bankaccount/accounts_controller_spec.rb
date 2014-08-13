@@ -19,7 +19,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
-    ::Balanced::BankAccount.stub(:fetch).and_return(bank_account)
+    ::Balanced::BankAccount.stub(:find).and_return(bank_account)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     Notification.stub(:notify)
     controller.stub(:authenticate_user!)
