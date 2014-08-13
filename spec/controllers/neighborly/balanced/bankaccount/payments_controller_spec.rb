@@ -4,15 +4,21 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   routes { Neighborly::Balanced::Bankaccount::Engine.routes }
 
   let(:current_user) { double('User').as_null_object }
+
+  let(:bank_account) do
+    double('::Balanced::BankAccount', href: '/ABANK').as_null_object
+  end
+
   let(:customer) do
     double('::Balanced::Customer',
-           bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK')],
-           uri:           '/qwertyuiop').as_null_object
+           bank_accounts: [bank_account],
+           href:           '/qwertyuiop').as_null_object
   end
 
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
+    ::Balanced::BankAccount.stub(:fetch).and_return(bank_account)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.stub(:complete)
     controller.stub(:authenticate_user!)
