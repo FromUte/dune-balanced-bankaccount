@@ -21,7 +21,7 @@
               label.row
                 dl
                   .large-1.columns
-                    = f.radio_button :use_bank, @bank_account.uri, { class: 'use-bank', checked: true, label: false }
+                    = f.radio_button :use_bank, @bank_account.href, { class: 'use-bank', checked: true, label: false }
                   .large-5.columns
                     dt.hide
                     dd = @bank_account.account_number

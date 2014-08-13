@@ -6,7 +6,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
   let(:current_user) { double('User').as_null_object }
   let(:verification) { double('::Balanced::Verification',
                                 state: 'unverified',
-                                remaining_attempts: 2) }
+                                attempts_remaining: 2) }
   let(:customer) do
     double('::Balanced::Customer',
            bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK',
@@ -83,7 +83,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
     end
 
     context 'when user has a bank account already confirmed' do
-      let(:verification) { double('::Balanced::Verification', state: 'verified') }
+      let(:verification) { double('::Balanced::Verification', verification_status: 'succeeded') }
 
       it 'should redirect to user payments page' do
         get :new
@@ -153,9 +153,9 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
 
       context 'with do no remaining attempts' do
         before do
-          # Balanced does not decrease Verification#remaining_attempts
+          # Balanced does not decrease Verification#attempts_remaining
           # after a fail attempt
-          verification.stub(:remaining_attempts).and_return(1)
+          verification.stub(:attempts_remaining).and_return(1)
         end
 
         it 'should start a new verification' do
@@ -179,7 +179,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
         it 'should alert the user about the error' do
           customer.bank_accounts.first.stub(:verify)
           post :create, params
-          expect(flash.alert).to eq I18n.t('messages.not_remaining_attempts', scope: i18n_scope)
+          expect(flash.alert).to eq I18n.t('messages.none_attempts_remaining', scope: i18n_scope)
         end
       end
     end
