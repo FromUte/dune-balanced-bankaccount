@@ -4,7 +4,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
   let(:customer)     { double('::Balanced::Customer') }
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
   let(:attrs)        { { use_bank: '/ABANK' } }
-  let(:bank_account) { double('::Balanced::BankAccount', verifications: []) }
+  let(:bank_account) { double('::Balanced::BankAccount', bank_account_verifications: []) }
   subject { described_class.new(customer, contribution, attrs) }
 
   before do
@@ -13,7 +13,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
 
   describe 'ability to debit resource' do
     before do
-      bank_account.stub(:verifications).and_return(verifications)
+      bank_account.stub(:bank_account_verifications).and_return(verifications)
     end
 
     context 'with confirmed verification' do

@@ -28,7 +28,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def can_debit_resource?
-      debit_resource.verifications.first.try(:state).eql? 'verified'
+      debit_resource.bank_account_verifications.to_a.first.try(:state).eql? 'verified'
     end
 
     def debit_resource

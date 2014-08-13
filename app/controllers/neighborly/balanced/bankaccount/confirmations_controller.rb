@@ -52,7 +52,7 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def verification
-      @verification ||= bank_account.verifications.try(:first)
+      @verification ||= bank_account.bank_account_verifications.to_a.first
     end
 
     def bank_account

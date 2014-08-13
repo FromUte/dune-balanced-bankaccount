@@ -10,7 +10,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
   let(:customer) do
     double('::Balanced::Customer',
            bank_accounts: [double('::Balanced::BankAccount', uri: '/ABANK',
-                                  verifications: [verification]
+                                  bank_account_verifications: [verification]
                                  )],
            uri:           '/qwertyuiop').as_null_object
   end
