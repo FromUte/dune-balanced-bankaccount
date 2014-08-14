@@ -48,15 +48,9 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def debit_description
-
       I18n.t('description',
              project_name: resource.try(:project).try(:name),
              scope: "neighborly.balanced.bankaccount.payments.debit.#{resource_name}")
-    end
-
-    def project_owner_customer
-      @project_owner_customer ||= Neighborly::Balanced::Customer.new(
-        resource.project.user, {}).fetch
     end
 
     def meta

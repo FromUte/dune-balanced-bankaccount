@@ -4,11 +4,8 @@ describe Neighborly::Balanced::Bankaccount::Payment do
   shared_examples_for 'payable' do
     let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
     let(:debit)        { double('::Balanced::Debit').as_null_object }
-    let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
-    let(:attributes)   { { use_bank: bank_account.uri } }
-    let(:project_owner_customer) do
-      double('::Balanced::Customer', uri: 'project-owner-uri')
-    end
+    let(:bank_account) { double('::Balanced::BankAccount', href: '/ABANK') }
+    let(:attributes)   { { use_bank: bank_account.href } }
     subject do
       described_class.new('balanced-bankaccount',
                           customer,
