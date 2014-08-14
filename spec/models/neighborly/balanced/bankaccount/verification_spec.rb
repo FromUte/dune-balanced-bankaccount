@@ -31,12 +31,4 @@ describe Neighborly::Balanced::Bankaccount::Verification do
       subject.confirm
     end
   end
-
-  describe 'bank account href' do
-    it 'gets its contributor from request params' do
-      subject.stub(:href).and_return('/v1/bank_accounts/XXXXX/verifications/YYYYY')
-      Configuration.stub(:[]).with(:balanced_marketplace_id).and_return('QWERTY')
-      expect(subject.bank_account_href).to eql('/v1/marketplaces/QWERTY/bank_accounts/XXXXX')
-    end
-  end
 end

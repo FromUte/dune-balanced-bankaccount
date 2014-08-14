@@ -10,14 +10,8 @@ module Neighborly::Balanced::Bankaccount
       @source = balanced_verification
     end
 
-    def bank_account
-      ::Balanced::BankAccount.find(bank_account_href)
-    end
-
     def bank_account_href
-      account_href = href.match(/\A(?<bank_account_href>\/.+\/bank_accounts\/.+)\/verifications/)[:bank_account_href]
-      account_href['/bank_accounts'] = "/marketplaces/#{Configuration[:balanced_marketplace_id]}/bank_accounts"
-      account_href
+      bank_account.href
     end
 
     def contributor
