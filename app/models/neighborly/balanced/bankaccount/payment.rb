@@ -5,11 +5,11 @@ module Neighborly::Balanced::Bankaccount
         amount:                  amount_in_cents,
         appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
         description:             debit_description,
-        meta:                    meta,
-        source_uri:              debit_resource_href,
+        meta:                    meta
       }
 
-      @debit = @customer.debit(debit_params)
+      bank_account = ::Balanced::BankAccount.find(debit_resource_href)
+      @debit       = bank_account.debit(debit_params)
       resource.confirm!
     rescue Balanced::BadRequest
       @status = :failed
