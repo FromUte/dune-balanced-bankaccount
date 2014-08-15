@@ -22,7 +22,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
       end
 
       it 'is able to debit resource' do
-        expect(subject.can_debit_resource?).to be_true
+        expect(subject.can_debit_resource?).to be_truthy
       end
     end
 
@@ -32,7 +32,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
       end
 
       it 'isn\'t able to debit resource' do
-        expect(subject.can_debit_resource?).to be_false
+        expect(subject.can_debit_resource?).to be_falsey
       end
     end
 
@@ -40,7 +40,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
       let(:verifications) { [] }
 
       it 'isn\'t able to debit resource' do
-        expect(subject.can_debit_resource?).to be_false
+        expect(subject.can_debit_resource?).to be_falsey
       end
     end
   end

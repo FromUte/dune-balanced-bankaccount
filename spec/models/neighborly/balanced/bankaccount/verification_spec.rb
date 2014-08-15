@@ -15,9 +15,9 @@ describe Neighborly::Balanced::Bankaccount::Verification do
 
   describe 'user' do
     it 'gets the user related to the contributor of the verification' do
-      bank_account_uri = '/ABANK'
+      bank_account_href = '/ABANK'
       Neighborly::Balanced::Contributor.stub(:find_by).
-        with(bank_account_uri: bank_account_uri).
+        with(bank_account_href: bank_account_href).
         and_return(contributor)
     end
   end
@@ -29,14 +29,6 @@ describe Neighborly::Balanced::Bankaccount::Verification do
         Neighborly::Balanced::Bankaccount::DebitAuthorizedContributionsWorker
       ).to receive(:perform_async).with(contributor.id)
       subject.confirm
-    end
-  end
-
-  describe 'bank account uri' do
-    it 'gets its contributor from request params' do
-      subject.stub(:uri).and_return('/v1/bank_accounts/XXXXX/verifications/YYYYY')
-      Configuration.stub(:[]).with(:balanced_marketplace_id).and_return('QWERTY')
-      expect(subject.bank_account_uri).to eql('/v1/marketplaces/QWERTY/bank_accounts/XXXXX')
     end
   end
 end

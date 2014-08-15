@@ -5,11 +5,11 @@ module Neighborly::Balanced::Bankaccount
         amount:                  amount_in_cents,
         appears_on_statement_as: ::Configuration[:balanced_appears_on_statement_as],
         description:             debit_description,
-        meta:                    meta,
-        source_uri:              debit_resource_uri,
+        meta:                    meta
       }
 
-      @debit = @customer.debit(debit_params)
+      bank_account = ::Balanced::BankAccount.find(debit_resource_href)
+      @debit       = bank_account.debit(debit_params)
       resource.confirm!
     rescue Balanced::BadRequest
       @status = :failed
@@ -28,12 +28,12 @@ module Neighborly::Balanced::Bankaccount
       %i(pending succeeded).include? status
     end
 
-    def debit_resource_uri
-      attrs.fetch(:use_bank) { contributor.bank_account_uri }
+    def debit_resource_href
+      attrs.fetch(:use_bank) { contributor.bank_account_href }
     end
 
     def contributor
-      @contributor ||= Neighborly::Balanced::Contributor.find_by(uri: @customer.uri)
+      @contributor ||= Neighborly::Balanced::Contributor.find_by(href: @customer.href)
     end
 
     private
@@ -48,15 +48,9 @@ module Neighborly::Balanced::Bankaccount
     end
 
     def debit_description
-
       I18n.t('description',
              project_name: resource.try(:project).try(:name),
              scope: "neighborly.balanced.bankaccount.payments.debit.#{resource_name}")
-    end
-
-    def project_owner_customer
-      @project_owner_customer ||= Neighborly::Balanced::Customer.new(
-        resource.project.user, {}).fetch
     end
 
     def meta

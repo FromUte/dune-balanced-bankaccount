@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Neighborly::Balanced::Bankaccount::DelayedPayment do
   let(:customer)     { double('::Balanced::Customer') }
   let(:contribution) { double('Contribution', value: 1234).as_null_object }
-  let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
-  let(:attributes)   { { pay_fee: '1', use_bank: bank_account.uri } }
+  let(:bank_account) { double('::Balanced::BankAccount', href: '/ABANK') }
+  let(:attributes)   { { pay_fee: '1', use_bank: bank_account.href } }
   subject do
     described_class.new('balanced-bankaccount',
                         customer,

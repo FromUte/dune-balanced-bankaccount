@@ -17,7 +17,7 @@ describe Neighborly::Balanced::Bankaccount::Interface do
 
   describe '#payment_path' do
     context 'when resource is a Contribution' do
-      let(:resource) { mock_model('Contribution', id: 42) }
+      let(:resource) { Contribution.new(id: 42) }
 
       it 'should return payment path' do
         expect(subject.payment_path(resource)).to eq Neighborly::Balanced::Bankaccount::Engine.
@@ -26,7 +26,7 @@ describe Neighborly::Balanced::Bankaccount::Interface do
     end
 
     context 'when resource is a Match' do
-      let(:resource) { mock_model('Match', id: 42) }
+      let(:resource) { Match.new(id: 42) }
 
       it 'should return payment path' do
         expect(subject.payment_path(resource)).to eq Neighborly::Balanced::Bankaccount::Engine.

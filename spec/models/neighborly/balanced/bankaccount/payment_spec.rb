@@ -2,13 +2,10 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Payment do
   shared_examples_for 'payable' do
-    let(:customer)     { double('::Balanced::Customer', uri: '/CUSTOMER-ID') }
+    let(:customer)     { double('::Balanced::Customer', href: '/CUSTOMER-ID') }
     let(:debit)        { double('::Balanced::Debit').as_null_object }
-    let(:bank_account) { double('::Balanced::BankAccount', uri: '/ABANK') }
-    let(:attributes)   { { use_bank: bank_account.uri } }
-    let(:project_owner_customer) do
-      double('::Balanced::Customer', uri: 'project-owner-uri')
-    end
+    let(:bank_account) { double('::Balanced::BankAccount', href: '/ABANK') }
+    let(:attributes)   { { use_bank: bank_account.href } }
     subject do
       described_class.new('balanced-bankaccount',
                           customer,
@@ -16,21 +13,21 @@ describe Neighborly::Balanced::Bankaccount::Payment do
                           attributes)
     end
     before do
-      subject.stub(:debit_resource).and_return(bank_account)
-      customer.stub(:debit).and_return(debit)
+      Balanced::BankAccount.stub(:find).with(bank_account.href).
+        and_return(bank_account)
       subject.stub_chain(:contributor, :projects).and_return([])
 
-      ::Balanced::Customer.stub(:find).and_return(project_owner_customer)
       resource.stub_chain(:project, :user, :balanced_contributor).and_return(
-        double('BalancedContributor', uri: 'project-owner-uri'))
+        double('BalancedContributor', href: 'project-owner-href'))
 
+      allow(bank_account).to receive(:debit).and_return(debit)
       resource.stub(:value).and_return(1234)
       described_class.any_instance.stub(:meta).and_return({})
     end
 
     describe '#amount_in_cents' do
       context 'when customer is paying fees' do
-        let(:attributes) { { pay_fee: '1', use_bank: bank_account.uri } }
+        let(:attributes) { { pay_fee: '1', use_bank: bank_account.href } }
 
         it 'returns gross amount from TransactionAdditionalFeeCalculator' do
           Neighborly::Balanced::Bankaccount::TransactionAdditionalFeeCalculator.
@@ -40,7 +37,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       end
 
       context 'when customer is not paying fees' do
-        let(:attributes) { { pay_fee: '0', use_bank: bank_account.uri } }
+        let(:attributes) { { pay_fee: '0', use_bank: bank_account.href } }
 
         it 'returns gross amount from TransactionInclusiveFeeCalculator' do
           Neighborly::Balanced::Bankaccount::TransactionInclusiveFeeCalculator.
@@ -52,31 +49,36 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
     describe 'checkout' do
       shared_examples 'updates resource object' do
-        let(:attributes)  { { pay_fee: '1', use_bank: bank_account.uri } }
+        let(:attributes)  { { pay_fee: '1', use_bank: bank_account.href } }
 
-        context 'when a source_uri is provided' do
+        context 'when a use_bank is provided' do
+          before do
+            allow(Balanced::BankAccount).to receive(:find).
+              with(bank_account.href).and_return(bank_account)
+          end
+
           it 'debits customer on selected funding instrument' do
-            customer.should_receive(:debit).
-                     with(hash_including(source_uri: bank_account.uri)).
-                     and_return(debit)
+            expect(bank_account).to receive(:debit)
             subject.checkout!
           end
         end
 
-        context 'when no source_uri is provided' do
+        context 'when no use_bank is provided' do
           let(:contributor) do
             double('Neighborly::Balanced::Contributor',
-              bank_account_uri: '/MY-DEFAULT-BANK',
+              bank_account_href: '/MY-DEFAULT-BANK',
               projects:         []
             )
           end
           let(:attributes) { { pay_fee: '1' } }
-          before { subject.stub(:contributor).and_return(contributor) }
+          before do
+            subject.stub(:contributor).and_return(contributor)
+            allow(Balanced::BankAccount).to receive(:find).
+              with(contributor.bank_account_href).and_return(bank_account)
+          end
 
           it 'debits customer on default funding instrument' do
-            customer.should_receive(:debit).
-                     with(hash_including(source_uri: contributor.bank_account_uri)).
-                     and_return(debit)
+            expect(bank_account).to receive(:debit)
             subject.checkout!
           end
         end
@@ -105,7 +107,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       end
 
       context 'with successful debit' do
-        before { customer.stub(:debit).and_return(debit) }
+        before { bank_account.stub(:debit).and_return(debit) }
 
         include_examples 'updates resource object'
 
@@ -118,7 +120,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
             and_return('Neighbor.ly')
 
-          customer.should_receive(:debit).
+          bank_account.should_receive(:debit).
                    with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
                    and_return(debit)
           subject.checkout!
@@ -133,7 +135,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
         it 'defines meta on debit' do
           described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
-          customer.should_receive(:debit).
+          bank_account.should_receive(:debit).
                    with(hash_including(meta: { payment_service_fee: 5.0 })).
                    and_return(debit)
           subject.checkout!
@@ -142,7 +144,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
       context 'when raising Balanced::BadRequest exception' do
         before do
-          customer.stub(:debit).and_raise(Balanced::BadRequest.new({}))
+          bank_account.stub(:debit).and_raise(Balanced::BadRequest.new({}))
         end
 
         include_examples 'updates resource object'
@@ -156,7 +158,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       context 'when a description is provided to debit' do
         it 'defines description on debit' do
           resource.stub_chain(:project, :name).and_return('Awesome Project')
-          customer.should_receive(:debit).
+          bank_account.should_receive(:debit).
                    with(hash_including(description: debit_description)).
                    and_return(debit)
           subject.checkout!
@@ -185,7 +187,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
     describe 'successful state' do
       before do
-        customer.stub(:debit).and_return(debit)
+        bank_account.stub(:debit).and_return(debit)
       end
 
       context 'after checkout' do

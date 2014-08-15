@@ -19,7 +19,7 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
-    ::Balanced::BankAccount.stub(:fetch).and_return(bank_account)
+    ::Balanced::BankAccount.stub(:find).and_return(bank_account)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     Notification.stub(:notify)
     controller.stub(:authenticate_user!)
@@ -119,10 +119,10 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           post :create, params
         end
 
-        it 'updates Balanced::Contributor\'s bank_account_uri' do
+        it 'updates Balanced::Contributor\'s bank_account_href' do
           expect(
             contributor
-          ).to receive(:update_attributes).with(bank_account_uri: '/ABANK')
+          ).to receive(:update_attributes).with(bank_account_href: '/ABANK')
           post :create, params
         end
       end
@@ -153,10 +153,10 @@ describe Neighborly::Balanced::Bankaccount::AccountsController do
           post :create, params
         end
 
-        it 'updates Balanced::Contributor\'s bank_account_uri' do
+        it 'updates Balanced::Contributor\'s bank_account_href' do
           expect(
             contributor
-          ).to receive(:update_attributes).with(bank_account_uri: '/ABANK')
+          ).to receive(:update_attributes).with(bank_account_href: '/ABANK')
           post :create, params
         end
 

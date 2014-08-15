@@ -18,7 +18,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentsController do
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
-    ::Balanced::BankAccount.stub(:fetch).and_return(bank_account)
+    ::Balanced::BankAccount.stub(:find).and_return(bank_account)
     ::Configuration.stub(:fetch).and_return('SOME_KEY')
     Neighborly::Balanced::Bankaccount::PaymentGenerator.any_instance.stub(:complete)
     controller.stub(:authenticate_user!)
