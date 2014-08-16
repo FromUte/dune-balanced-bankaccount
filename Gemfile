@@ -14,4 +14,3 @@ end.join("\n"))
 
 gemspec
 gem 'neighborly-balanced', github: 'neighborly/neighborly-balanced', branch: :master
-

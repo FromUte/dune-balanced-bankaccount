@@ -17,8 +17,9 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         and_return(bank_account)
       subject.stub_chain(:contributor, :projects).and_return([])
 
-      resource.stub_chain(:project, :user, :balanced_contributor).and_return(
-        double('BalancedContributor', href: 'project-owner-href'))
+      User.any_instance.stub(:balanced_contributor).and_return(
+        double('BalancedContributor', href: 'project-owner-href')
+      )
 
       allow(bank_account).to receive(:debit).and_return(debit)
       resource.stub(:value).and_return(1234)
@@ -112,7 +113,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         include_examples 'updates resource object'
 
         it 'confirms the resource' do
-          expect(resource).to receive(:confirm!)
+          expect(resource).to receive(:confirm)
           subject.checkout!
         end
 
@@ -150,14 +151,14 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         include_examples 'updates resource object'
 
         it 'cancels the resource' do
-          expect(resource).to receive(:cancel!)
+          expect(resource).to receive(:cancel)
           subject.checkout!
         end
       end
 
       context 'when a description is provided to debit' do
         it 'defines description on debit' do
-          resource.stub_chain(:project, :name).and_return('Awesome Project')
+          Project.any_instance.stub(:name).and_return('Awesome Project')
           bank_account.should_receive(:debit).
                    with(hash_including(description: debit_description)).
                    and_return(debit)
@@ -218,14 +219,14 @@ describe Neighborly::Balanced::Bankaccount::Payment do
   end
 
   context 'when resource is Contribution' do
-    let(:resource)          { Contribution.new }
+    let(:resource)          { FactoryGirl.create(:contribution) }
     let(:debit_description) { 'Contribution to Awesome Project' }
 
     it_should_behave_like 'payable'
   end
 
   context 'when resource is Match' do
-    let(:resource)          { Match.new }
+    let(:resource)          { FactoryGirl.create(:match) }
     let(:debit_description) { 'Match for Awesome Project' }
 
     it_should_behave_like 'payable'

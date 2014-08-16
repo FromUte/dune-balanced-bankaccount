@@ -10,10 +10,11 @@ module Neighborly::Balanced::Bankaccount
 
       bank_account = ::Balanced::BankAccount.find(debit_resource_href)
       @debit       = bank_account.debit(debit_params)
-      resource.confirm!
+      update_meta(@debit)
+      resource.confirm
     rescue Balanced::BadRequest
       @status = :failed
-      resource.cancel!
+      resource.cancel
     ensure
       resource.update_attributes(
         payment_id:                       @debit.try(:id),
@@ -21,7 +22,6 @@ module Neighborly::Balanced::Bankaccount
         payment_service_fee:              fee_calculator.fees,
         payment_service_fee_paid_by_user: attrs[:pay_fee]
       )
-      update_meta(@debit) if @debit
     end
 
     def successful?
