@@ -17,11 +17,15 @@ class UseHrefsForBalancedResources < ActiveRecord::Migration
 
   def fetch_hrefs
     Neighborly::Balanced::Contributor.transaction do
-      Neighborly::Balanced::Contributor.all.each do |customer|
-        bank_account = Balanced::BankAccount.find(customer.bank_account_uri)
-        customer.bank_account_href = bank_account.href
-        customer.href = bank_account.customer.href
-        customer.save(validate: false)
+      Neighborly::Balanced::Contributor.all.each do |contributor|
+        if contributor.bank_account_uri.present?
+          bank_account = Balanced::BankAccount.find(contributor.bank_account_uri)
+          contributor.bank_account_href = bank_account.href
+        end
+        customer = Balanced::Customer.find(contributor.uri)
+        contributor.href = customer.href
+        status = contributor.save(validate: false)
+        Rails.logger.info "Migrated bank_account_href of Contributor ##{contributor.id}. Successful? #{status}"
       end
     end
   end
