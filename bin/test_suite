@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Update dummy app
+if [ `ls spec/dummy/ | wc -l` -le 2 ]; then
+  echo "updating!"
+  git submodule init
+  git submodule update
+fi
+
+# Configure dummy app
+if [ ! -f spec/dummy/config/database.yml ]; then
+  echo "configuring!"
+  cd spec/dummy/ && ./bin/bootstrap && cd ../../
+  cp spec/dummy/.env.example .env
+  rm -r spec/dummy/spec
+fi
+
+echo "tests!"
+bundle exec rspec
