@@ -35,4 +35,10 @@ RSpec.configure do |config|
 
   config.include Devise::TestHelpers,                  type: :controller
   config.include Rails.application.routes.url_helpers, type: :controller
+
+  config.before(:each) do
+    NotificationWorker.stub(:perform_async)
+    UpdateCompletenessProgressWorker.stub(:perform_async)
+    WelcomeWorker.stub(:perform_async)
+  end
 end

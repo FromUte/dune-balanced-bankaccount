@@ -21,7 +21,6 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
   before do
     ::Balanced::Customer.stub(:find).and_return(customer)
     ::Balanced::Customer.stub(:new).and_return(customer)
-    Notification.stub(:notify)
   end
 
   context 'authenticated' do
