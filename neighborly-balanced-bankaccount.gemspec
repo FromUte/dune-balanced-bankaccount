@@ -25,6 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sidekiq', '~> 2.0'
   spec.add_development_dependency 'rspec-rails',      '~> 2.14'
   spec.add_development_dependency 'shoulda-matchers', '~> 2.5'
-  spec.add_development_dependency 'sqlite3',          '~> 1.3'
   spec.add_development_dependency 'webmock'
 end
