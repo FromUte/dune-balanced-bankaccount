@@ -21,7 +21,7 @@ describe Neighborly::Balanced::Bankaccount::Payment do
         double('BalancedContributor', href: 'project-owner-href')
       )
 
-      allow(bank_account).to receive(:debit).and_return(debit)
+      allow_any_instance_of(Neighborly::Balanced::OrderProxy).to receive(:debit_from).and_return(debit)
       resource.stub(:value).and_return(1234)
       described_class.any_instance.stub(:meta).and_return({})
     end
@@ -59,7 +59,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           end
 
           it 'debits customer on selected funding instrument' do
-            expect(bank_account).to receive(:debit)
+            expect_any_instance_of(
+              Neighborly::Balanced::OrderProxy
+            ).to receive(:debit_from).with(hash_including(source: bank_account)).
+              and_return(debit)
             subject.checkout!
           end
         end
@@ -79,7 +82,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           end
 
           it 'debits customer on default funding instrument' do
-            expect(bank_account).to receive(:debit)
+            expect_any_instance_of(
+              Neighborly::Balanced::OrderProxy
+            ).to receive(:debit_from).with(hash_including(source: bank_account)).
+              and_return(debit)
             subject.checkout!
           end
         end
@@ -108,7 +114,11 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       end
 
       context 'with successful debit' do
-        before { bank_account.stub(:debit).and_return(debit) }
+        before do
+          allow_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).and_return(debit)
+        end
 
         include_examples 'updates resource object'
 
@@ -121,9 +131,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
           ::Configuration.stub(:[]).with(:balanced_appears_on_statement_as).
             and_return('Neighbor.ly')
 
-          bank_account.should_receive(:debit).
-                   with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).with(hash_including(appears_on_statement_as: 'Neighbor.ly')).
+            and_return(debit)
           subject.checkout!
         end
 
@@ -136,16 +147,20 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
         it 'defines meta on debit' do
           described_class.any_instance.stub(:meta).and_return({ payment_service_fee: 5.0 })
-          bank_account.should_receive(:debit).
-                   with(hash_including(meta: { payment_service_fee: 5.0 })).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).with(hash_including(meta: { payment_service_fee: 5.0 })).
+            and_return(debit)
           subject.checkout!
         end
       end
 
       context 'when raising Balanced::BadRequest exception' do
         before do
-          bank_account.stub(:debit).and_raise(Balanced::BadRequest.new({}))
+          allow_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).
+            and_raise(Balanced::BadRequest.new({}))
         end
 
         include_examples 'updates resource object'
@@ -159,9 +174,10 @@ describe Neighborly::Balanced::Bankaccount::Payment do
       context 'when a description is provided to debit' do
         it 'defines description on debit' do
           Project.any_instance.stub(:name).and_return('Awesome Project')
-          bank_account.should_receive(:debit).
-                   with(hash_including(description: debit_description)).
-                   and_return(debit)
+          expect_any_instance_of(
+            Neighborly::Balanced::OrderProxy
+          ).to receive(:debit_from).with(hash_including(description: debit_description)).
+            and_return(debit)
           subject.checkout!
         end
       end
@@ -188,7 +204,9 @@ describe Neighborly::Balanced::Bankaccount::Payment do
 
     describe 'successful state' do
       before do
-        bank_account.stub(:debit).and_return(debit)
+        allow_any_instance_of(
+          Neighborly::Balanced::OrderProxy
+        ).to receive(:debit_from).and_return(debit)
       end
 
       context 'after checkout' do
