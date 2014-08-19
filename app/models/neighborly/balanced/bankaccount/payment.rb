@@ -3,7 +3,6 @@ module Neighborly::Balanced::Bankaccount
     def checkout!
       perform_debit!
       resource.confirm
-      update_meta(@debit)
     rescue Balanced::BadRequest
       @status = :failed
       resource.cancel
@@ -14,6 +13,7 @@ module Neighborly::Balanced::Bankaccount
         payment_service_fee:              fee_calculator.fees,
         payment_service_fee_paid_by_user: attrs[:pay_fee]
       )
+      update_meta(@debit) if @debit
     end
 
     def successful?
