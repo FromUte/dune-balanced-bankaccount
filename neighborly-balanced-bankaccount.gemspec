@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rails',   '~> 4.0'
   spec.add_dependency 'slim',    '~> 2.0'
-  spec.add_dependency 'sidekiq', '~> 2.0'
+  spec.add_dependency 'sidekiq', '~> 3.0'
   spec.add_development_dependency 'rspec-rails',      '~> 2.14'
   spec.add_development_dependency 'shoulda-matchers', '~> 2.5'
   spec.add_development_dependency 'webmock'
