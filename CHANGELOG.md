@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.0.0
+
+* Upgrade to Balanced API v1.1
+* Use orders
+* Introduce the possibility to pay for a match or a contribution
+* Upgrade ruby to 2.1.2
+* A lot of bug fixes
+
 ## 1.0.0
 
 * First stable version.
