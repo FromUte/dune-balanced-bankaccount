@@ -4,7 +4,7 @@ module Neighborly::Balanced
       case event.type
       when 'bank_account_verification.deposited'
         Notification.notify('balanced/bankaccount/confirm_bank_account', event.user)
-      when 'bank_account_verification.succeeded'
+      when 'bank_account_verification.verified'
         verification = Neighborly::Balanced::Bankaccount::Verification.find(event.entity_href)
         verification.confirm
       end

@@ -22,10 +22,10 @@ describe Neighborly::Balanced::EventRegistered do
       end
     end
 
-    context 'with \'bank_account_verification.succeeded\' event' do
+    context 'with \'bank_account_verification.verified\' event' do
       let(:verification) { double('Neighborly::Balanced::Bankaccount::Verification') }
       before do
-        event.stub(:type).and_return('bank_account_verification.succeeded')
+        event.stub(:type).and_return('bank_account_verification.verified')
       end
 
       it 'confirms the bank account verification' do
