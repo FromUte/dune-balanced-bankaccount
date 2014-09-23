@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.1
+
+* Change event name of expected notification received from API.
+
 ## 2.0.0
 
 * Upgrade to Balanced API v1.1
