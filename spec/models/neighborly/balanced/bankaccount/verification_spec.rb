@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Neighborly::Balanced::Bankaccount::Verification do
   let(:balanced_verification) do
-    double('Balanced::Verification',
+    double('Balanced::BankAccountVerification',
       id:  'VERIFICATION-ID',
       uri: '/v1/xxxxxxxxxxxxxx/verifications/VERIFICATION-ID'
     )

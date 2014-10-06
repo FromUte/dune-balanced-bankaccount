@@ -18,7 +18,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
 
     context 'with confirmed verification' do
       let(:verifications) do
-        [double('::Balanced::Verification', verification_status: 'succeeded')]
+        [double('::Balanced::BankAccountVerification', verification_status: 'succeeded')]
       end
 
       it 'is able to debit resource' do
@@ -28,7 +28,7 @@ describe Neighborly::Balanced::Bankaccount::PaymentGenerator do
 
     context 'with verification started' do
       let(:verifications) do
-        [double('::Balanced::Verification', state: 'deposit_succeeded')]
+        [double('::Balanced::BankAccountVerification', state: 'deposit_succeeded')]
       end
 
       it 'isn\'t able to debit resource' do

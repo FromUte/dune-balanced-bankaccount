@@ -3,7 +3,7 @@ module Neighborly::Balanced::Bankaccount
     delegate :user, to: :contributor
 
     def self.find(href)
-      new(::Balanced::Verification.find(href))
+      new(::Balanced::BankAccountVerification.find(href))
     end
 
     def initialize(balanced_verification)
@@ -22,7 +22,7 @@ module Neighborly::Balanced::Bankaccount
       DebitAuthorizedContributionsWorker.perform_async(contributor.id)
     end
 
-    # Delegate instance methods to Balanced::Verification object
+    # Delegate instance methods to Balanced::BankAccountVerification object
     def method_missing(method, *args, &block)
       if @source.respond_to? method
         @source.public_send(method, *args, &block)

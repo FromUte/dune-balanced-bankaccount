@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
   routes { Neighborly::Balanced::Bankaccount::Engine.routes }
 
-  let(:verification) { double('::Balanced::Verification',
+  let(:verification) { double('::Balanced::BankAccountVerification',
                                 state: 'unverified',
                                 attempts_remaining: 2) }
   let(:customer) do
@@ -85,7 +85,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
       end
 
       context 'when user has a bank account already confirmed' do
-        let(:verification) { double('::Balanced::Verification', verification_status: 'succeeded') }
+        let(:verification) { double('::Balanced::BankAccountVerification', verification_status: 'succeeded') }
 
         it 'should redirect to user payments page' do
           get :new
@@ -155,7 +155,7 @@ describe Neighborly::Balanced::Bankaccount::ConfirmationsController do
 
         context 'with do no remaining attempts' do
           before do
-            # Balanced does not decrease Verification#attempts_remaining
+            # Balanced does not decrease BankAccountVerification#attempts_remaining
             # after a fail attempt
             verification.stub(:attempts_remaining).and_return(1)
           end

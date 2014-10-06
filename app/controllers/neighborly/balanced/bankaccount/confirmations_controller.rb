@@ -16,7 +16,7 @@ module Neighborly::Balanced::Bankaccount
       flash.notice = t('.messages.success')
       redirect_to main_app.payments_user_path(current_user)
     rescue Balanced::BankAccountVerificationFailure
-      # Balanced does not decrease Verification#attempts_remaining
+      # Balanced does not decrease BankAccountVerification#attempts_remaining
       # after a failure
       @attempts_remaining = verification.attempts_remaining - 1
       flash.alert = t('.messages.unable_to_verify')
