@@ -7,6 +7,7 @@ gemspec_gems = %w(
   neighborly-balanced-bankaccount'
   neighborly-balanced'
   rspec-rails'
+  spring'
 )
 eval_gemfile gemfile_url, (gemfile_content.split("\n").reject do |line|
   line.empty? || Regexp.union(*gemspec_gems).match(line)
