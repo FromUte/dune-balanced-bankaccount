@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.2
+
+* Upgrade name of Balanced's internal class to BankAccountVerification.
+
 ## 2.0.1
 
 * Change event name of expected notification received from API.
