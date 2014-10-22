@@ -54,7 +54,7 @@ Neighborly.Neighborly.Balanced.Bankaccount.Form = Backbone.View.extend
       name:           this.$('#payment_account_holder_name').val()
       routing_number: this.$('#payment_routing_number').val()
       account_number: this.$('#payment_account_number').val()
-      type:           this.$('input[name="payment[account_type]"]:checked').val()
+      account_type:   this.$('input[name="payment[account_type]"]:checked').val()
 
     this.$('[data-balanced-bank-account-input]').val('')
 

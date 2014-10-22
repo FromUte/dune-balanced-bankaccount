@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.3
+
+* Fix bank account type
+
+
 ## 2.0.2
 
 * Upgrade name of Balanced's internal class to BankAccountVerification.
