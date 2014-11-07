@@ -4,7 +4,7 @@
 
 ## What
 
-This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighborly](https://github.com/luminopolis/neighborly), a crowdfunding platform.
+This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighbor.ly Donate](https://github.com/neighborly/neighborly-donate), a crowdfunding platform.
 
 ## How
 
@@ -15,7 +15,7 @@ Include this gem as dependency of your project, adding the following line in you
 gem 'neighborly-balanced-bankaccount'
 ```
 
-Neighborly::Balanced::Bankaccount is a Rails Engine, integrating with your (Neighborly) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
+Neighborly::Balanced::Bankaccount is a Rails Engine, integrating with your (Neighbor.ly Donate) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
 
 ```ruby
 # config/routes.rb
