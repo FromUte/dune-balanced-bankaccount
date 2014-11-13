@@ -2,3 +2,5 @@ rvm:
   - 2.1.3
 cache: bundler
 script: './bin/test_suite'
+notifications:
+  webhooks: https://ci.neighbor.ly/projects/a5a65e22-073e-4209-80f3-e7d31f772590/status
