@@ -1,0 +1,24 @@
+Dune.Dune                               ?= {}
+Dune.Dune.Balanced                      ?= {}
+Dune.Dune.Balanced.Bankaccount          ?= {}
+Dune.Dune.Balanced.Bankaccount.Accounts ?= {}
+
+Dune.Dune.Balanced.Bankaccount.Accounts.New =
+  modules: -> [Dune.Dune.Balanced.Bankaccount.Form]
+  init: Backbone.View.extend
+    el: '.dune-balanced-bankaccount-form'
+
+    initialize: ->
+      _.bindAll(this, 'toggleSelected', 'toggleReplaceBank')
+      this.$('input[name="payment[show_bank]"]').bind('change', this.toggleReplaceBank)
+      this.$('input[type=radio]').bind('change', this.toggleSelected)
+      this.toggleSelected()
+
+    toggleSelected: ->
+      this.$('.bank-box').removeClass('selected')
+      this.$('input[type=radio]:checked.show-bank').parents('.bank-box').addClass('selected')
+
+    toggleReplaceBank: (event)->
+      $box = $(event.currentTarget).parents('.bank-box')
+      $('.expandable').addClass('hide')
+      $box.find('.expandable').removeClass('hide')

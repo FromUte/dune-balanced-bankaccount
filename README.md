@@ -1,10 +1,8 @@
-# Neighborly::Balanced::Bankaccount
-
-[![Build Status](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount.png?branch=jl-setup-test-env)](https://travis-ci.org/neighborly/neighborly-balanced-bankaccount) [![Code Climate](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount.png)](https://codeclimate.com/github/neighborly/neighborly-balanced-bankaccount)
+# Dune::Balanced::Bankaccount
 
 ## What
 
-This is an integration between [Balanced](https://www.balancedpayments.com/) and [Neighbor.ly Donate](https://github.com/neighborly/neighborly-donate), a crowdfunding platform.
+This is an integration between [Balanced](https://www.balancedpayments.com/) and [dune-investissement](https://github.com/FromUte/dune), a crowdfunding platform.
 
 ## How
 
@@ -12,20 +10,20 @@ Include this gem as dependency of your project, adding the following line in you
 
 ```ruby
 # Gemfile
-gem 'neighborly-balanced-bankaccount'
+gem 'dune-balanced-bankaccount'
 ```
 
-Neighborly::Balanced::Bankaccount is a Rails Engine, integrating with your (Neighbor.ly Donate) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
+Dune::Balanced::Bankaccount is a Rails Engine, integrating with your (Neighbor.ly Donate) Rails application with very little of effort. To turn the engine on, mount it in an appropriate route:
 
 ```ruby
 # config/routes.rb
-mount Neighborly::Balanced::Bankaccount::Engine => '/', as: 'neighborly_balanced_bankaccount'
+mount Dune::Balanced::Bankaccount::Engine => '/', as: 'dune_balanced_bankaccount'
 ```
 
 And load our JavaScript:
 
 ```coffeescript
-//= require neighborly-balanced-bankaccount
+//= require dune-balanced-bankaccount
 ```
 
 And install the engine:
@@ -40,7 +38,7 @@ We have a rake task to update the Routing Numbers from [fededirectory.frb.org](h
 
 From your main app, just run:
 
-`$ rake neighborly_balanced_bankaccount:update_routing_numbers`
+`$ rake dune_balanced_bankaccount:update_routing_numbers`
 
 ## Contributing
 
